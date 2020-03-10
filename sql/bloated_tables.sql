@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2019-2020. Ivan Vakhrushev and others.
+ * https://github.com/mfvanek/pg-index-health-sql
+ *
+ * Licensed under the Apache License 2.0
+ */
+
 -- Based on
 -- https://wiki.postgresql.org/wiki/Show_database_bloat
 -- https://github.com/dataegret/pg-utils/blob/master/sql/table_bloat.sql

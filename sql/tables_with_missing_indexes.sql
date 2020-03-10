@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2019-2020. Ivan Vakhrushev and others.
+ * https://github.com/mfvanek/pg-index-health-sql
+ *
+ * Licensed under the Apache License 2.0
+ */
+
 with tables_without_indexes as (
     select psat.relid::regclass::text as table_name,
         pg_table_size(psat.relid) as table_size,

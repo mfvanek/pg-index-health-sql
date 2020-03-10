@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2019-2020. Ivan Vakhrushev and others.
+ * https://github.com/mfvanek/pg-index-health-sql
+ *
+ * Licensed under the Apache License 2.0
+ */
+
 select c.conrelid::regclass as table_name,
     string_agg(col.attname, ', ' order by u.attposition) as columns,
     c.conname as constraint_name

@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2019-2020. Ivan Vakhrushev and others.
+ * https://github.com/mfvanek/pg-index-health-sql
+ *
+ * Licensed under the Apache License 2.0
+ */
+
 select table_name,
     string_agg('idx=' || idx::text || ', size=' || pg_relation_size(idx), '; ') as duplicated_indexes
 from (

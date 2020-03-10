@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2019-2020. Ivan Vakhrushev and others.
+ * https://github.com/mfvanek/pg-index-health-sql
+ *
+ * Licensed under the Apache License 2.0
+ */
+
 select a.indrelid::regclass as table_name,
                         'idx=' || a.indexrelid::regclass || ', size=' || pg_relation_size(a.indexrelid) || '; idx=' ||
                         b.indexrelid::regclass || ', size=' || pg_relation_size(b.indexrelid) as intersected_indexes

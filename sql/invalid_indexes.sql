@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2019-2020. Ivan Vakhrushev and others.
+ * https://github.com/mfvanek/pg-index-health-sql
+ *
+ * Licensed under the Apache License 2.0
+ */
+
 select x.indrelid::regclass as table_name,
     x.indexrelid::regclass as index_name
 from pg_catalog.pg_index x
