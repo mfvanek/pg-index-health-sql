@@ -5,12 +5,16 @@
  * Licensed under the Apache License 2.0
  */
 
-select psat.relid::regclass::text as table_name,
-    pg_table_size(psat.relid) as table_size
-from pg_catalog.pg_stat_all_tables psat
-where psat.schemaname = :schema_name_param::text
-  and psat.relid::regclass not in (
-    select c.conrelid::regclass as table_name
-    from pg_catalog.pg_constraint c
-    where c.contype = 'p')
-order by psat.relname::text;
+select
+    pc.oid::regclass::text as table_name,
+    pg_table_size(pc.oid) as table_size
+from pg_catalog.pg_class pc
+    join pg_catalog.pg_namespace pn on pc.relnamespace = pn.oid
+where
+    pc.relkind = 'r' and
+    pc.oid not in (
+        select c.conrelid as table_oid
+        from pg_catalog.pg_constraint c
+        where c.contype = 'p') and
+    pn.nspname = :schema_name_param::text
+order by pc.oid::regclass::text;
