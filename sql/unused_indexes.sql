@@ -5,6 +5,9 @@
  * Licensed under the Apache License 2.0
  */
 
+-- Finds potentially unused indexes.
+-- This sql query have to be executed on all hosts in the cluster.
+-- The final result can be obtained as an intersection of results from all hosts.
 with foreign_key_indexes as (
     select i.indexrelid
     from pg_catalog.pg_constraint c

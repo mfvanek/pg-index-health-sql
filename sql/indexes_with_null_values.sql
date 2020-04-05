@@ -5,6 +5,7 @@
  * Licensed under the Apache License 2.0
  */
 
+-- Finds indexes that can contain null values.
 select x.indrelid::regclass as table_name,
     x.indexrelid::regclass as index_name,
     string_agg(a.attname, ', ') as nullable_fields,

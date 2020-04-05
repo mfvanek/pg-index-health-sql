@@ -5,6 +5,7 @@
  * Licensed under the Apache License 2.0
  */
 
+-- Finds completely identical indexes.
 select table_name,
     string_agg('idx=' || idx::text || ', size=' || pg_relation_size(idx), '; ') as duplicated_indexes
 from (
