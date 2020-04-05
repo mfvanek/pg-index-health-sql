@@ -5,6 +5,8 @@
  * Licensed under the Apache License 2.0
  */
 
+-- Finds foreign keys for which no index was created in the referencing (child) table.
+-- This will cause the child table to be scanned sequentially when deleting an entry from the referenced (parent) table.
 select c.conrelid::regclass as table_name,
     string_agg(col.attname, ', ' order by u.attposition) as columns,
     c.conname as constraint_name

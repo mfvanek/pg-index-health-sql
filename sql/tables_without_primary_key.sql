@@ -5,6 +5,7 @@
  * Licensed under the Apache License 2.0
  */
 
+-- Finds tables that don't have a primary key.
 select
     pc.oid::regclass::text as table_name,
     pg_table_size(pc.oid) as table_size

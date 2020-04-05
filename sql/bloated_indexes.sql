@@ -5,6 +5,8 @@
  * Licensed under the Apache License 2.0
  */
 
+-- Finds indexes with the bloat.
+--
 -- Based on
 -- https://wiki.postgresql.org/wiki/Show_database_bloat
 -- https://blog.ioguix.net/postgresql/2014/03/28/Playing-with-indexes-and-better-bloat-estimate.html

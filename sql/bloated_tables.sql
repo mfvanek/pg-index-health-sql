@@ -5,6 +5,8 @@
  * Licensed under the Apache License 2.0
  */
 
+-- Finds tables with the bloat.
+--
 -- Based on
 -- https://wiki.postgresql.org/wiki/Show_database_bloat
 -- https://github.com/dataegret/pg-utils/blob/master/sql/table_bloat.sql

@@ -5,6 +5,8 @@
  * Licensed under the Apache License 2.0
  */
 
+-- Finds tables that may not have enough indexes.
+-- It is important to understand that this check will give a false positive result for small tables.
 with tables_without_indexes as (
     select psat.relid::regclass::text as table_name,
         pg_table_size(psat.relid) as table_size,
