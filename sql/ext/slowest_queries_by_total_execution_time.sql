@@ -8,7 +8,7 @@
 -- Finds the slowest queries by total execution time.
 -- Requires the pg_stat_statement extension.
 select
-    round(total_time / 1000 / 60)::integer as total_time_minutes,
+    round(total_time::numeric, 3) as total_time_ms,
     calls as calls_count,
     round(mean_time::numeric, 3) as average_time_ms,
     query
