@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2020. Ivan Vakhrushev and others.
+ * Copyright (c) 2019-2021. Ivan Vakhrushev and others.
  * https://github.com/mfvanek/pg-index-health-sql
  *
  * Licensed under the Apache License 2.0
