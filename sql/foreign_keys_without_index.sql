@@ -8,8 +8,8 @@
 -- Finds foreign keys for which no index was created in the referencing (child) table.
 -- This will cause the child table to be scanned sequentially when deleting an entry from the referenced (parent) table.
 select c.conrelid::regclass as table_name,
-    string_agg(col.attname, ', ' order by u.attposition) as columns,
-    c.conname as constraint_name
+    c.conname as constraint_name,
+    array_agg(col.attname || ', ' || col.attnotnull::text order by u.attposition) as columns
 from pg_catalog.pg_constraint c
          join lateral unnest(c.conkey) with ordinality as u(attnum, attposition) on true
          join pg_catalog.pg_class t on (c.conrelid = t.oid)
