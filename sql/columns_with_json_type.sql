@@ -19,6 +19,7 @@ from pg_catalog.pg_class t
 where
     t.relkind = 'r' and
     col.attnum > 0 and /* to filter out system columns such as oid, ctid, xmin, xmax, etc.*/
+    not col.attisdropped and
     col.atttypid::regtype::text = 'json' and
     nsp.nspname = :schema_name_param::text
 order by t.oid::regclass::text, col.attname::text;
