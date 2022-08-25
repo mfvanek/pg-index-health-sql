@@ -12,7 +12,7 @@ select x.indrelid::regclass as table_name,
     pg_relation_size(x.indexrelid) as index_size
 from pg_catalog.pg_index x
          join pg_catalog.pg_stat_all_indexes psai on x.indexrelid = psai.indexrelid
-         join pg_catalog.pg_attribute a ON a.attrelid = x.indrelid AND a.attnum = any (x.indkey)
+         join pg_catalog.pg_attribute a ON a.attrelid = x.indrelid AND a.attnum = any(x.indkey)
 where not x.indisunique
   and not a.attnotnull
   and psai.schemaname = :schema_name_param::text

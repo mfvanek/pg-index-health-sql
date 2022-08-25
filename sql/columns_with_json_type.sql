@@ -15,11 +15,11 @@ select
     col.attnotnull as column_not_null
 from pg_catalog.pg_class t
     join pg_catalog.pg_namespace nsp on nsp.oid = t.relnamespace
-    join pg_catalog.pg_attribute col on (col.attrelid = t.oid)
+    join pg_catalog.pg_attribute col on col.attrelid = t.oid
 where
     t.relkind = 'r' and
     col.attnum > 0 and /* to filter out system columns such as oid, ctid, xmin, xmax, etc.*/
     not col.attisdropped and
-    col.atttypid::regtype::text = 'json' and
+    col.atttypid = 'json'::regtype and
     nsp.nspname = :schema_name_param::text
 order by t.oid::regclass::text, col.attname::text;

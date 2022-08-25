@@ -12,9 +12,9 @@ select c.conrelid::regclass as table_name,
     array_agg(col.attname || ', ' || col.attnotnull::text order by u.attposition) as columns
 from pg_catalog.pg_constraint c
          join lateral unnest(c.conkey) with ordinality as u(attnum, attposition) on true
-         join pg_catalog.pg_class t on (c.conrelid = t.oid)
+         join pg_catalog.pg_class t on c.conrelid = t.oid
          join pg_catalog.pg_namespace nsp on nsp.oid = t.relnamespace
-         join pg_catalog.pg_attribute col on (col.attrelid = t.oid and col.attnum = u.attnum)
+         join pg_catalog.pg_attribute col on col.attrelid = t.oid and col.attnum = u.attnum
 where c.contype = 'f'
   and nsp.nspname = :schema_name_param::text
   and not exists(
