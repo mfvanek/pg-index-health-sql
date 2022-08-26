@@ -12,7 +12,7 @@ select
     col.attname::text as column_name,
     col.attnotnull as column_not_null,
     case col.atttypid
-        when 'int'::regtype  then 'serial'
+        when 'int'::regtype then 'serial'
         when 'int8'::regtype then 'bigserial'
         when 'int2'::regtype then 'smallserial' end as column_type,
     pg_get_serial_sequence(col.attrelid::regclass::text, col.attname) as sequence_name
@@ -24,12 +24,12 @@ from
     join pg_attrdef ad on ad.adrelid = col.attrelid and ad.adnum = col.attnum
 where
     t.relkind = 'r' and
-    col.attnum > 0 and /* to filter out system columns such as oid, ctid, xmin, xmax, etc.*/
+    col.attnum > 0 and /* to filter out system columns such as oid, ctid, xmin, xmax, etc. */
     not col.attisdropped and
     col.atttypid = any('{int,int8,int2}'::regtype[]) and
     c.contype != 'p' and /* not primary key */
     array_length(c.conkey, 1) = 1 and /* single column */
     /* column default value = nextval from owned sequence */
-    pg_get_expr(ad.adbin, ad.adrelid) = 'nextval(''' || (pg_get_serial_sequence (col.attrelid::regclass::text, col.attname))::regclass || '''::regclass)' and
+    pg_get_expr(ad.adbin, ad.adrelid) = 'nextval(''' || (pg_get_serial_sequence(col.attrelid::regclass::text, col.attname))::regclass || '''::regclass)' and
     nsp.nspname = :schema_name_param::text
 order by t.oid::regclass::text, col.attname::text;
