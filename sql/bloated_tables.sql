@@ -34,14 +34,13 @@ with tables_stats as (
         pg_attribute as pa
         join pg_class as pc on pa.attrelid = pc.oid
         join pg_namespace as pn on pn.oid = pc.relnamespace
-        join pg_stats as ps
-            on ps.schemaname = pn.nspname and ps.tablename = pc.relname and ps.inherited = false and ps.attname = pa.attname
+        join pg_stats as ps on ps.schemaname = pn.nspname and ps.tablename = pc.relname and ps.inherited = false and ps.attname = pa.attname
         left join pg_class as toast on pc.reltoastrelid = toast.oid
     where
-        not pa.attisdropped
-        and pc.relkind = 'r'
-        and pc.relpages > 0
-        and pn.nspname = :schema_name_param::text
+        not pa.attisdropped and
+        pc.relkind = 'r' and
+        pc.relpages > 0 and
+        pn.nspname = :schema_name_param::text
     group by table_oid, pc.reltuples, heap_pages, toast_pages, toast_tuples, fill_factor, block_size, page_header_size
 ),
 tables_pages_size as (
@@ -60,7 +59,7 @@ tables_pages_size as (
         page_header_size,
         table_oid,
         fill_factor
-    from tables_stats as ts
+    from tables_stats
 ),
 relation_stats as (
     select
@@ -70,7 +69,7 @@ relation_stats as (
         block_size,
         table_oid::regclass::text as table_name,
         pg_table_size(table_oid) as table_size
-    from tables_pages_size as tps
+    from tables_pages_size
 ),
 corrected_relation_stats as (
     select
@@ -79,7 +78,7 @@ corrected_relation_stats as (
         (case when table_pages_count - estimated_pages_count > 0 then table_pages_count - estimated_pages_count
             else 0 end)::bigint as pages_ff_diff,
         block_size
-    from relation_stats as rs
+    from relation_stats
 ),
 bloat_stats as (
     select

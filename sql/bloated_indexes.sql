@@ -106,16 +106,15 @@ rows_header_stats as (
         index_oid,
         fill_factor,
         table_oid,
-        (index_tuple_header_size + max_align
-             /* add padding to the index tuple header to align on max_align */
-             -
-         case when index_tuple_header_size % max_align = 0 then max_align else index_tuple_header_size % max_align end
-             + null_data_width + max_align
+        (index_tuple_header_size + max_align -
+            /* add padding to the index tuple header to align on max_align */
+            case when index_tuple_header_size % max_align = 0 then max_align else index_tuple_header_size % max_align end +
+            null_data_width + max_align -
             /* add padding to the data to align on max_align */
-            - case
-                  when null_data_width = 0 then 0
-                  when null_data_width::integer % max_align = 0 then max_align
-                  else null_data_width::integer % max_align end
+            case
+                when null_data_width = 0 then 0
+                when null_data_width::integer % max_align = 0 then max_align
+                else null_data_width::integer % max_align end
             )::numeric as null_data_header_width,
         page_header_size,
         page_opaque_data_size
@@ -135,7 +134,8 @@ relation_stats as (
     from rows_header_stats
 ),
 corrected_relation_stats as (
-    select table_name,
+    select
+        table_name,
         index_name,
         index_size,
         block_size,
