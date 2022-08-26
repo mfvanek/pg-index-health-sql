@@ -14,14 +14,14 @@ from (
         x.indexrelid::regclass as idx,
         x.indrelid::regclass as table_name,
         (x.indrelid::text || ' ' || x.indclass::text || ' ' || x.indkey::text || ' ' ||
-         x.indcollation::text || e' ' ||
+         x.indcollation::text || ' ' ||
          coalesce(pg_get_expr(x.indexprs, x.indrelid), '') || ' ' ||
-         coalesce(pg_get_expr(x.indpred, x.indrelid), '')) as key
+         coalesce(pg_get_expr(x.indpred, x.indrelid), '')) as grouping_key
     from
         pg_catalog.pg_index x
         join pg_catalog.pg_stat_all_indexes psai on x.indexrelid = psai.indexrelid
     where psai.schemaname = :schema_name_param::text
 ) sub
-group by table_name, key
+group by table_name, grouping_key
 having count(*) > 1
 order by table_name, sum(pg_relation_size(idx)) desc;
