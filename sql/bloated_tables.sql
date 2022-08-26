@@ -34,8 +34,7 @@ with tables_stats as (
         pg_attribute as pa
         join pg_class as pc on pa.attrelid = pc.oid
         join pg_namespace as pn on pn.oid = pc.relnamespace
-        join pg_stats as ps
-            on ps.schemaname = pn.nspname and ps.tablename = pc.relname and ps.inherited = false and ps.attname = pa.attname
+        join pg_stats as ps on ps.schemaname = pn.nspname and ps.tablename = pc.relname and ps.inherited = false and ps.attname = pa.attname
         left join pg_class as toast on pc.reltoastrelid = toast.oid
     where
         not pa.attisdropped

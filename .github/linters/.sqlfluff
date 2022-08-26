@@ -1,6 +1,6 @@
 [sqlfluff]
 dialect = postgres
-exclude_rules = L031,L034,L051
+exclude_rules = L003,L026,L031,L034,L051
 
 [sqlfluff:rules]
 max_line_length = 180

@@ -23,6 +23,7 @@ select
     seq_scan,
     idx_scan
 from tables_without_indexes
-where (seq_scan + idx_scan) > 100::integer /*table in use*/
-  and too_much_seq > 0 /*too much sequential scans*/
+where
+    (seq_scan + idx_scan) > 100::integer and /*table in use*/
+    too_much_seq > 0 /*too much sequential scans*/
 order by table_name, too_much_seq desc;
