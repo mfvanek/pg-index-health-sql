@@ -1,6 +1,7 @@
 # pg-index-health-sql
 **pg-index-health-sql** is a set of sql-queries for analyzing and maintaining indexes health in Postgresql databases.
 
+[![Lint Code Base](https://github.com/mfvanek/pg-index-health-sql/actions/workflows/linter.yml/badge.svg)](https://github.com/mfvanek/pg-index-health-sql/actions/workflows/linter.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/mfvanek/pg-index-health-sql/blob/master/LICENSE "Apache License 2.0")
 
 ## Supported PostgreSQL versions

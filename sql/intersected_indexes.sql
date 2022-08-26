@@ -15,7 +15,8 @@ with index_info as (
          array_to_string(pi.indkey, ' ') as cols,
          'idx=' || pi.indexrelid::regclass || ', size=' || pg_relation_size(pi.indexrelid) as info,
          coalesce(pg_get_expr(pi.indpred, pi.indrelid, true), '') as pred
-    from pg_catalog.pg_index pi
+    from
+        pg_catalog.pg_index pi
         join pg_catalog.pg_stat_all_indexes psai on pi.indexrelid = psai.indexrelid
     where psai.schemaname = :schema_name_param::text
 )

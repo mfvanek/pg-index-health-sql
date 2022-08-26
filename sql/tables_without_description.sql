@@ -9,7 +9,8 @@
 select
     pc.oid::regclass::text as table_name,
     pg_table_size(pc.oid) as table_size
-from pg_catalog.pg_class pc
+from
+    pg_catalog.pg_class pc
     join pg_catalog.pg_namespace pn on pc.relnamespace = pn.oid
 where
     pc.relkind = 'r' and
