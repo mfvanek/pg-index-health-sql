@@ -6,7 +6,8 @@
  */
 
 -- Finds indexes that can contain null values.
-select x.indrelid::regclass as table_name,
+select
+    x.indrelid::regclass as table_name,
     x.indexrelid::regclass as index_name,
     string_agg(a.attname, ', ') as nullable_fields,
     pg_relation_size(x.indexrelid) as index_size

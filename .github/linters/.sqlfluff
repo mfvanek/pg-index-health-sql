@@ -1,0 +1,12 @@
+[sqlfluff]
+dialect = postgres
+exclude_rules = L031,L034,L051
+
+[sqlfluff:rules]
+max_line_length = 180
+
+[sqlfluff:rules:L007]
+operator_new_lines = before
+
+[sqlfluff:rules:L011]
+aliasing = implicit

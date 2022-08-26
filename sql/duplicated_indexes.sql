@@ -6,10 +6,12 @@
  */
 
 -- Finds completely identical indexes.
-select table_name,
+select
+    table_name,
     string_agg('idx=' || idx::text || ', size=' || pg_relation_size(idx), '; ') as duplicated_indexes
 from (
-    select x.indexrelid::regclass as idx,
+    select
+        x.indexrelid::regclass as idx,
         x.indrelid::regclass as table_name,
         (x.indrelid::text || ' ' || x.indclass::text || ' ' || x.indkey::text || ' ' ||
          x.indcollation::text || e' ' ||
