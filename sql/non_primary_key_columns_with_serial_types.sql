@@ -5,7 +5,7 @@
  * Licensed under the Apache License 2.0
  */
 
--- Finds columns of serial types (smallserial/serial/bigserial) that not are primary keys.
+-- Finds columns of serial types (smallserial/serial/bigserial) that are not primary keys.
 -- Based on https://dba.stackexchange.com/questions/90555/postgresql-select-primary-key-as-serial-or-bigserial/
 select
     col.attrelid::regclass::text as table_name,
@@ -20,15 +20,15 @@ from
     pg_catalog.pg_class t
     join pg_catalog.pg_namespace nsp on nsp.oid = t.relnamespace
     join pg_catalog.pg_attribute col on col.attrelid = t.oid
-    join pg_constraint c on c.conrelid = col.attrelid and c.conkey[1] = col.attnum
     join pg_attrdef ad on ad.adrelid = col.attrelid and ad.adnum = col.attnum
+    left join pg_constraint c on c.conrelid = col.attrelid and c.conkey[1] = col.attnum
 where
     t.relkind = 'r' and
     col.attnum > 0 and /* to filter out system columns such as oid, ctid, xmin, xmax, etc. */
     not col.attisdropped and
     col.atttypid = any('{int,int8,int2}'::regtype[]) and
-    c.contype != 'p' and /* not primary key */
-    array_length(c.conkey, 1) = 1 and /* single column */
+    (c.contype is null or (c.contype != 'p' and /* not primary key */
+    array_length(c.conkey, 1) = 1)) and /* single column */
     /* column default value = nextval from owned sequence */
     pg_get_expr(ad.adbin, ad.adrelid) = 'nextval(''' || (pg_get_serial_sequence(col.attrelid::regclass::text, col.attname))::regclass || '''::regclass)' and
     nsp.nspname = :schema_name_param::text
