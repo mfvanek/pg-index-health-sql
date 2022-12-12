@@ -4,6 +4,9 @@
 [![Lint Code Base](https://github.com/mfvanek/pg-index-health-sql/actions/workflows/linter.yml/badge.svg)](https://github.com/mfvanek/pg-index-health-sql/actions/workflows/linter.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/mfvanek/pg-index-health-sql/blob/master/LICENSE "Apache License 2.0")
 
+[![Total lines](https://tokei.rs/b1/github/mfvanek/pg-index-health-sql)](https://github.com/mfvanek/pg-index-health-sql)
+[![Files](https://tokei.rs/b1/github/mfvanek/pg-index-health-sql?category=files)](https://github.com/mfvanek/pg-index-health-sql)
+
 ## Supported PostgreSQL versions
 [![PostgreSQL 10](https://img.shields.io/badge/PostgreSQL-10-green.svg)](https://www.postgresql.org/about/news/1786/ "PostgreSQL 10")
 [![PostgreSQL 11](https://img.shields.io/badge/PostgreSQL-11-green.svg)](https://www.postgresql.org/about/news/1894/ "PostgreSQL 11")
