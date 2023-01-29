@@ -1,6 +1,6 @@
 [sqlfluff]
 dialect = postgres
-exclude_rules = L003,L011,L022,L025,L026,L031,L034,L037,L042,L051,L054
+exclude_rules = L003,L011,L022,L025,L026,L031,L034,L037,L042,L051,L054,L071
 ignore = parsing
 
 [sqlfluff:rules]

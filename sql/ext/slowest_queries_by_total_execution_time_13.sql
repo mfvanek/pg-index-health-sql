@@ -6,13 +6,13 @@
  */
 
 -- Finds the slowest queries by total execution time.
--- Requires the pg_stat_statement extension.
--- Compatible with PostgreSQL 12 and lower.
+-- Requires the pg_stat_statement extension https://www.postgresql.org/docs/current/pgstatstatements.html
+-- Compatible with PostgreSQL 13 and higher.
 select
-    round(total_time::numeric, 3) as total_time_ms,
+    round(total_exec_time::numeric, 3) as total_time_ms,
     calls as calls_count,
-    round(mean_time::numeric, 3) as average_time_ms,
+    round(mean_exec_time::numeric, 3) as average_time_ms,
     query
 from pg_stat_statements
-order by total_time desc
+order by total_exec_time desc
 limit :limit_count::integer;
