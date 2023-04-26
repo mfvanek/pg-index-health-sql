@@ -1,13 +1,12 @@
 [sqlfluff]
 dialect = postgres
-exclude_rules = L003,L011,L022,L025,L026,L031,L034,L037,L042,L051,L054,L071
+exclude_rules = LT01, LT02, LT03, LT08, AM03, AM05, AL01, AL05, ST06
+warnings = AM06, ST05
 ignore = parsing
-
-[sqlfluff:rules]
 max_line_length = 180
 
-[sqlfluff:rules:L007]
+[sqlfluff:rules:layout.operators]
 operator_new_lines = before
 
-[sqlfluff:rules:L029]
+[sqlfluff:rules:references.keywords]
 ignore_words = columns,toast
