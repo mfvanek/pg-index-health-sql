@@ -17,6 +17,7 @@
 -- Please note!
 -- The user on whose behalf this sql query will be executed
 -- have to have read permissions for the corresponding tables.
+-- noqa: disable=PRS
 with indexes_data as (
     select
         pc.relname as inner_index_name,

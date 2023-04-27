@@ -8,6 +8,7 @@
 -- Finds the slowest queries by total execution time.
 -- Requires the pg_stat_statement extension.
 -- Compatible with PostgreSQL 12 and lower.
+-- noqa: disable=PRS
 select
     round(total_time::numeric, 3) as total_time_ms,
     calls as calls_count,
