@@ -37,5 +37,11 @@
 ### Linting
 To run super-linter locally
 ```shell
-docker run -e RUN_LOCAL=true -e USE_FIND_ALGORITHM=true -e VALIDATE_ALL_CODEBASE=false -e VALIDATE_SQLFLUFF=true -v $(pwd):/tmp/lint github/super-linter:slim-v5
+docker run \
+  -e RUN_LOCAL=true \
+  -e USE_FIND_ALGORITHM=true \
+  -e VALIDATE_ALL_CODEBASE=false \
+  -e VALIDATE_SQLFLUFF=true \
+  -v $(pwd):/tmp/lint \
+  github/super-linter:slim-v5
 ```

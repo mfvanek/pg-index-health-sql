@@ -2,8 +2,14 @@
 dialect = postgres
 exclude_rules = LT01, LT02, LT03, LT08, AM03, AM05, AL01, AL05, ST06
 warnings = AM06, ST05
-ignore = parsing
 max_line_length = 180
+templater = raw
+
+[sqlfluff:indentation]
+indented_joins = True
+allow_implicit_indents = True
+indented_on_contents = False
+indented_ctes = True
 
 [sqlfluff:rules:layout.operators]
 operator_new_lines = before
