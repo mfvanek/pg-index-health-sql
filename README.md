@@ -1,5 +1,5 @@
 # pg-index-health-sql
-**pg-index-health-sql** is a set of sql-queries for analyzing and maintaining indexes health in Postgresql databases.
+**pg-index-health-sql** is a set of sql-queries for analyzing and maintaining indexes and tables health in Postgresql databases.
 
 [![Lint Code Base](https://github.com/mfvanek/pg-index-health-sql/actions/workflows/linter.yml/badge.svg)](https://github.com/mfvanek/pg-index-health-sql/actions/workflows/linter.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/mfvanek/pg-index-health-sql/blob/master/LICENSE "Apache License 2.0")
@@ -8,12 +8,16 @@
 [![Files](https://tokei.rs/b1/github/mfvanek/pg-index-health-sql?category=files)](https://github.com/mfvanek/pg-index-health-sql)
 
 ## Supported PostgreSQL versions
-[![PostgreSQL 10](https://img.shields.io/badge/PostgreSQL-10-green.svg)](https://www.postgresql.org/about/news/1786/ "PostgreSQL 10")
-[![PostgreSQL 11](https://img.shields.io/badge/PostgreSQL-11-green.svg)](https://www.postgresql.org/about/news/1894/ "PostgreSQL 11")
 [![PostgreSQL 12](https://img.shields.io/badge/PostgreSQL-12-green.svg)](https://www.postgresql.org/about/news/1976/ "PostgreSQL 12")
 [![PostgreSQL 13](https://img.shields.io/badge/PostgreSQL-13-green.svg)](https://www.postgresql.org/about/news/postgresql-13-released-2077/ "PostgreSQL 13")
 [![PostgreSQL 14](https://img.shields.io/badge/PostgreSQL-14-green.svg)](https://www.postgresql.org/about/news/postgresql-14-released-2318/ "PostgreSQL 14")
 [![PostgreSQL 15](https://img.shields.io/badge/PostgreSQL-15-green.svg)](https://www.postgresql.org/about/news/postgresql-15-released-2526/ "PostgreSQL 15")
+[![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-green.svg)](https://www.postgresql.org/about/news/postgresql-16-released-2715/ "PostgreSQL 16")
+
+### Support for previous versions of PostgreSQL
+Compatibility with PostgreSQL versions **9.6**, **10** and **11** is no longer guaranteed, but it is very likely.  
+We focus only on the currently maintained versions of PostgreSQL.  
+For more information please see [PostgreSQL Versioning Policy](https://www.postgresql.org/support/versioning/).
 
 ## Available checks
 **pg-index-health-sql** allows you to detect the following problems:
