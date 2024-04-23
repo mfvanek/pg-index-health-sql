@@ -12,17 +12,16 @@
 select
     i.indrelid::regclass as table_name,  -- Name of the table
     i.indexrelid::regclass as index_name, -- Name of the index
-
-    a.amname    -- index type
+    a.amname, -- Index type
+    col.attname as column_name, -- Column name
+    col.attnotnull as column_not_null -- Column not null
 from pg_catalog.pg_index as i
-    inner join pg_catalog.pg_stat_all_indexes psai on i.indexrelid = psai.indexrelid
     inner join pg_catalog.pg_class as ic on i.indexrelid = ic.oid
+    inner join pg_catalog.pg_namespace as nsp on nsp.oid = ic.relnamespace
     inner join pg_catalog.pg_am as a on ic.relam = a.oid and a.amname = 'btree'
-    inner join pg_catalog.pg_class as c on i.indrelid = c.oid
-where psai.schemaname = :schemaname and
--- check the existence of a column with an array type in the index
-    exists (select * from pg_catalog.pg_attribute as att
-                inner join pg_catalog.pg_type as typ on typ.oid = att.atttypid
-                where att.attrelid = i.indrelid
-                    and att.attnum = any ((string_to_array(indkey::text, ' ')::int2[])[1:indnkeyatts])
-                    and typ.typcategory = 'A');
+    inner join pg_catalog.pg_attribute as col on i.indrelid = col.attrelid and col.attnum = any((string_to_array(i.indkey::text, ' ')::int2[])[:i.indnkeyatts])
+    inner join pg_catalog.pg_type as typ on typ.oid = col.atttypid
+where
+	nsp.nspname = :schema_name_param::text and
+	typ.typcategory = 'A'
+order by ic.oid::regclass::text, i.indexrelid::regclass::text;
