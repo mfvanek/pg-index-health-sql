@@ -57,7 +57,7 @@ named_indexes_attributes as (
         ic.inner_index_name,
         ic.attpos,
         ic.indkey,
-        ic.indkey[ic.attpos],
+        ic.indkey[ic.attpos] as indattpos,
         ic.reltuples,
         ic.relpages,
         ic.index_oid,

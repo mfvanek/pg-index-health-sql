@@ -1,6 +1,6 @@
 [sqlfluff]
 dialect = postgres
-exclude_rules = LT01, LT02, LT03, LT08, AM03, AM05, AL01, AL05, ST06
+exclude_rules = LT01, LT02, LT03, LT08, AM03, AM05, AL01, AL05, ST06, ST09
 warnings = AM06, ST05
 max_line_length = 180
 templater = raw
