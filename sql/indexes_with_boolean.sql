@@ -9,6 +9,7 @@
 select
     pi.indrelid::regclass::text as table_name,
     pi.indexrelid::regclass::text as index_name,
+    pg_relation_size(pi.indexrelid) as index_size,
     col.attname as column_name,
     col.attnotnull as column_not_null
 from
