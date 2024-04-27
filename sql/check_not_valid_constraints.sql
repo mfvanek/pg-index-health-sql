@@ -6,7 +6,7 @@
  */
 
 select
-    t.relname as table_name, -- Name of the table
+    c.conrelid::regclass as table_name, -- Name of the table
     c.conname as constraint_name, -- Name of the constraint
     c.contype as constraint_type  -- Type of the constraint
 from
@@ -16,4 +16,5 @@ from
 where
     not c.convalidated -- Constraints that have not yet been validated
     and c.contype in ('c', 'f') -- Focus on check and foreign key constraints
-    and n.nspname = :schema_name_param::text; -- Make the query schema-aware
+    and n.nspname = :schema_name_param::text -- Make the query schema-aware
+order by c.conrelid::regclass::text, c.conname;
