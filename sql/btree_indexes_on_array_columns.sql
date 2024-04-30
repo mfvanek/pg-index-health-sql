@@ -12,6 +12,7 @@
 select
     i.indrelid::regclass as table_name,  -- Name of the table
     i.indexrelid::regclass as index_name, -- Name of the index
+    pg_relation_size(i.indexrelid) as index_size, -- Size of the index
     col.attname as column_name, -- Column name
     col.attnotnull as column_not_null -- Column not null
 from pg_catalog.pg_index as i
