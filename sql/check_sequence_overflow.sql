@@ -36,7 +36,7 @@ sequence_state as (
         end ::numeric(5, 2) as remaining_percentage -- percentage of remaining values
     from all_sequences as t
 )
-select *
+select s.*
 from sequence_state as s
 where
     s.remaining_percentage <= :remaining_percentage_threshold::numeric(5, 2)
