@@ -29,12 +29,13 @@ with tables_stats as (
         24 as page_header_size,
         23 + case when max(coalesce(ps.null_frac, 0)) > 0 then (7 + count(ps.attname)) / 8 else 0::int end +
             case when bool_or(pa.attname = 'oid' and pa.attnum < 0) then 4 else 0 end as table_tuple_header_size,
-        sum((1 - coalesce(ps.null_frac, 0)) * coalesce(ps.avg_width, 0)) as null_data_width
+        sum((1 - coalesce(ps.null_frac, 0)) * coalesce(ps.avg_width, 0)) as null_data_width,
+        bool_or(pa.atttypid = 'pg_catalog.name'::regtype) or sum(case when pa.attnum > 0 then 1 else 0 end) <> count(ps.attname) as stats_not_available
     from
         pg_attribute as pa
         join pg_class as pc on pa.attrelid = pc.oid
         join pg_namespace as pn on pn.oid = pc.relnamespace
-        join pg_stats as ps on ps.schemaname = pn.nspname and ps.tablename = pc.relname and ps.inherited = false and ps.attname = pa.attname
+        left join pg_stats as ps on ps.schemaname = pn.nspname and ps.tablename = pc.relname and ps.inherited = false and ps.attname = pa.attname
         left join pg_class as toast on pc.reltoastrelid = toast.oid
     where
         not pa.attisdropped and
@@ -58,7 +59,8 @@ tables_pages_size as (
         block_size,
         page_header_size,
         table_oid,
-        fill_factor
+        fill_factor,
+        stats_not_available
     from tables_stats
 ),
 relation_stats as (
@@ -68,7 +70,8 @@ relation_stats as (
         table_pages_count,
         block_size,
         table_oid::regclass::text as table_name,
-        pg_table_size(table_oid) as table_size
+        pg_table_size(table_oid) as table_size,
+        stats_not_available
     from tables_pages_size
 ),
 corrected_relation_stats as (
@@ -77,7 +80,8 @@ corrected_relation_stats as (
         table_size,
         (case when table_pages_count - estimated_pages_count > 0 then table_pages_count - estimated_pages_count
             else 0 end)::bigint as pages_ff_diff,
-        block_size
+        block_size,
+        stats_not_available
     from relation_stats
 ),
 bloat_stats as (
@@ -85,10 +89,13 @@ bloat_stats as (
         table_name,
         table_size,
         block_size * pages_ff_diff as bloat_size,
-        case when table_size > 0 then round(100 * block_size * pages_ff_diff / table_size::float)::integer else 0 end as bloat_percentage
+        case when table_size > 0 then round(100 * block_size * pages_ff_diff / table_size::numeric, 2) else 0 end ::numeric(5, 2) as bloat_percentage,
+        stats_not_available
     from corrected_relation_stats
 )
 select *
 from bloat_stats
-where bloat_percentage >= :bloat_percentage_threshold::integer
+where
+    not stats_not_available and
+    bloat_percentage >= :bloat_percentage_threshold::numeric(5, 2)
 order by table_name;

@@ -54,6 +54,7 @@ nested_indexes_attributes as (
 named_indexes_attributes as (
     select
         ic.table_oid,
+        ct.relnamespace,
         ic.inner_index_name,
         ic.attpos,
         ic.indkey,
@@ -92,10 +93,12 @@ rows_data_stats as (
             else 2 + ((32 + 8 - 1) / 8) /* indextupledata size + indexattributebitmapdata size (max num filed per index + 8 - 1 /8) */
             end as index_tuple_header_size,
         /* remove null values and save space using it fractional part from stats */
-        sum((1 - coalesce(s.null_frac, 0)) * coalesce(s.avg_width, 0)) as null_data_width
+        sum((1 - coalesce(s.null_frac, 0)) * coalesce(s.avg_width, 0)) as null_data_width,
+        max(case when i.atttypid = 'pg_catalog.name'::regtype then 1 else 0 end) > 0 as stats_not_available
     from
         named_indexes_attributes i
-        join pg_catalog.pg_stats s on s.schemaname = i.nspname and s.tablename = i.attrelname and s.attname = i.attname
+        join pg_catalog.pg_namespace n on n.oid = i.relnamespace
+        join pg_catalog.pg_stats s on s.schemaname = n.nspname and s.tablename = i.attrelname and s.attname = i.attname
     group by 1, 2, 3, 4, 5, 6, 7, 8, 9
 ),
 rows_header_stats as (
@@ -118,12 +121,13 @@ rows_header_stats as (
                 else null_data_width::integer % max_align end
             )::numeric as null_data_header_width,
         page_header_size,
-        page_opaque_data_size
+        page_opaque_data_size,
+        stats_not_available
     from rows_data_stats
 ),
 relation_stats as (
     select
-        /* itemiddata size + computed avg size of a tuple (nulldatahdrwidth) */
+        /* itemiddata size + computed avg size of a tuple (null_data_header_width) */
         coalesce(1 +
                  ceil(reltuples / floor((block_size - page_opaque_data_size - page_header_size) * fill_factor / (100 * (4 + null_data_header_width)::float))),
             0)::bigint as estimated_pages_count,
@@ -131,7 +135,8 @@ relation_stats as (
         table_oid::regclass::text as table_name,
         index_oid::regclass::text as index_name,
         pg_relation_size(index_oid) as index_size,
-        relpages
+        relpages,
+        stats_not_available
     from rows_header_stats
 ),
 corrected_relation_stats as (
@@ -141,9 +146,8 @@ corrected_relation_stats as (
         index_size,
         block_size,
         relpages,
-        (case
-             when relpages - estimated_pages_count > 0 then relpages - estimated_pages_count
-             else 0 end)::bigint as pages_ff_diff
+        (case when relpages - estimated_pages_count > 0 then relpages - estimated_pages_count else 0 end)::bigint as pages_ff_diff,
+        stats_not_available
     from relation_stats
 ),
  bloat_stats as (
@@ -152,11 +156,13 @@ corrected_relation_stats as (
         index_name,
         index_size,
         block_size * pages_ff_diff as bloat_size,
-        round(100 * block_size * pages_ff_diff / index_size::float)::integer as bloat_percentage
-     from
-        corrected_relation_stats
+        round(100 * block_size * pages_ff_diff / index_size::numeric, 2)::numeric(5, 2) as bloat_percentage,
+        stats_not_available
+     from corrected_relation_stats
  )
 select *
 from bloat_stats
-where bloat_percentage >= :bloat_percentage_threshold::integer
+where
+    not stats_not_available and
+    bloat_percentage >= :bloat_percentage_threshold::numeric(5, 2)
 order by table_name, index_name;
