@@ -19,7 +19,7 @@ select
 	    when 'int'::regtype then 'serial'
 	    when 'int8'::regtype then 'bigserial'
 	    when 'int2'::regtype then 'smallserial' end as column_type,
-    pg_get_serial_sequence(col.attrelid::regclass::text, col.attname) as sequence_name
+    	pg_get_serial_sequence(col.attrelid::regclass::text, col.attname) as sequence_name
 from pg_catalog.pg_class t
     join pg_catalog.pg_namespace nsp on nsp.oid = t.relnamespace
     join pg_catalog.pg_attribute col on col.attrelid = t.oid
