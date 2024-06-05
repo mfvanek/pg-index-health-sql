@@ -11,7 +11,7 @@ select
     pg_table_size(pc.oid) as table_size
 from
     pg_catalog.pg_class pc
-    join pg_catalog.pg_namespace pn on pc.relnamespace = pn.oid
+    inner join pg_catalog.pg_namespace pn on pn.oid = pc.relnamespace
 where
     pc.relkind = 'r' and
     (obj_description(pc.oid) is null or length(trim(obj_description(pc.oid))) = 0) and

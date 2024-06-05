@@ -10,10 +10,10 @@
 -- Compatible with PostgreSQL 13 and higher.
 -- noqa: disable=PRS
 select
-    round(total_exec_time::numeric, 3) as total_time_ms,
     calls as calls_count,
-    round(mean_exec_time::numeric, 3) as average_time_ms,
-    query
+    query,
+    round(total_exec_time::numeric, 3) as total_time_ms,
+    round(mean_exec_time::numeric, 3) as average_time_ms
 from pg_stat_statements
 order by total_exec_time desc
 limit :limit_count::integer;

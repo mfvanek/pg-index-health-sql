@@ -12,7 +12,7 @@ select
     x.indexrelid::regclass as index_name
 from
     pg_catalog.pg_index x
-    join pg_catalog.pg_stat_all_indexes psai on x.indexrelid = psai.indexrelid
+    inner join pg_catalog.pg_stat_all_indexes psai on psai.indexrelid = x.indexrelid
 where
     psai.schemaname = :schema_name_param::text and
     x.indisvalid = false;

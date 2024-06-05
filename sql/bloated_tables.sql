@@ -16,6 +16,7 @@
 -- Please note!
 -- The user on whose behalf this sql query will be executed
 -- have to have read permissions for the corresponding tables.
+-- noqa: disable=ST06
 with tables_stats as (
     select
         pc.oid as table_oid,
@@ -32,11 +33,11 @@ with tables_stats as (
         sum((1 - coalesce(ps.null_frac, 0)) * coalesce(ps.avg_width, 0)) as null_data_width,
         bool_or(pa.atttypid = 'pg_catalog.name'::regtype) or sum(case when pa.attnum > 0 then 1 else 0 end) <> count(ps.attname) as stats_not_available
     from
-        pg_attribute as pa
-        join pg_class as pc on pa.attrelid = pc.oid
-        join pg_namespace as pn on pn.oid = pc.relnamespace
-        left join pg_stats as ps on ps.schemaname = pn.nspname and ps.tablename = pc.relname and ps.inherited = false and ps.attname = pa.attname
-        left join pg_class as toast on pc.reltoastrelid = toast.oid
+        pg_attribute pa
+        inner join pg_class pc on pc.oid = pa.attrelid
+        inner join pg_namespace pn on pn.oid = pc.relnamespace
+        left join pg_stats ps on ps.schemaname = pn.nspname and ps.tablename = pc.relname and ps.inherited = false and ps.attname = pa.attname
+        left join pg_class toast on toast.oid = pc.reltoastrelid
     where
         not pa.attisdropped and
         pc.relkind = 'r' and
@@ -44,6 +45,7 @@ with tables_stats as (
         pn.nspname = :schema_name_param::text
     group by table_oid, pc.reltuples, heap_pages, toast_pages, toast_tuples, fill_factor, block_size, page_header_size
 ),
+
 tables_pages_size as (
     select
         (4 + table_tuple_header_size + null_data_width + (2 * max_align) -
@@ -63,6 +65,7 @@ tables_pages_size as (
         stats_not_available
     from tables_stats
 ),
+
 relation_stats as (
     select
         ceil(reltuples / ((block_size - page_header_size) * fill_factor / (tpl_size * 100))) +
@@ -74,6 +77,7 @@ relation_stats as (
         stats_not_available
     from tables_pages_size
 ),
+
 corrected_relation_stats as (
     select
         table_name,
@@ -84,6 +88,7 @@ corrected_relation_stats as (
         stats_not_available
     from relation_stats
 ),
+
 bloat_stats as (
     select
         table_name,
@@ -93,6 +98,7 @@ bloat_stats as (
         stats_not_available
     from corrected_relation_stats
 )
+
 select *
 from bloat_stats
 where

@@ -13,8 +13,8 @@ select
     pg_relation_size(x.indexrelid) as index_size
 from
     pg_catalog.pg_index x
-    join pg_catalog.pg_stat_all_indexes psai on x.indexrelid = psai.indexrelid
-    join pg_catalog.pg_attribute a on a.attrelid = x.indrelid and a.attnum = any(x.indkey)
+    inner join pg_catalog.pg_stat_all_indexes psai on psai.indexrelid = x.indexrelid
+    inner join pg_catalog.pg_attribute a on a.attrelid = x.indrelid and a.attnum = any(x.indkey)
 where
     not x.indisunique and
     not a.attnotnull and

@@ -18,17 +18,19 @@ select
     case col.atttypid
         when 'int'::regtype then 'serial'
         when 'int8'::regtype then 'bigserial'
-        when 'int2'::regtype then 'smallserial' end as column_type,
-        pg_get_serial_sequence(col.attrelid::regclass::text, col.attname) as sequence_name
-from pg_catalog.pg_class t
-    join pg_catalog.pg_namespace nsp on nsp.oid = t.relnamespace
-    join pg_catalog.pg_attribute col on col.attrelid = t.oid
-    join pg_catalog.pg_attrdef ad on ad.adrelid = col.attrelid and ad.adnum = col.attnum
-    join pg_catalog.pg_constraint c on  c.conrelid = col.attrelid and col.attnum = any(c.conkey)
+        when 'int2'::regtype then 'smallserial'
+    end as column_type,
+    pg_get_serial_sequence(col.attrelid::regclass::text, col.attname) as sequence_name
+from
+    pg_catalog.pg_class t
+    inner join pg_catalog.pg_namespace nsp on nsp.oid = t.relnamespace
+    inner join pg_catalog.pg_attribute col on col.attrelid = t.oid
+    inner join pg_catalog.pg_attrdef ad on ad.adrelid = col.attrelid and ad.adnum = col.attnum
+    inner join pg_catalog.pg_constraint c on  c.conrelid = col.attrelid and col.attnum = any(c.conkey)
 where
-    col.atttypid = any('{int,int8,int2}'::regtype[])
-    and not col.attisdropped
-    and c.contype = 'p' -- primary keys
-    and pg_get_expr(ad.adbin, ad.adrelid) = 'nextval(''' || pg_get_serial_sequence(col.attrelid::regclass::text, col.attname)::regclass || '''::regclass)'
-    and nsp.nspname = :schema_name_param::text
+    col.atttypid = any('{int,int8,int2}'::regtype[]) and
+    not col.attisdropped and
+    c.contype = 'p' and -- primary keys
+    pg_get_expr(ad.adbin, ad.adrelid) = 'nextval(''' || pg_get_serial_sequence(col.attrelid::regclass::text, col.attname)::regclass || '''::regclass)' and
+    nsp.nspname = :schema_name_param::text
 order by t.oid::regclass::text, col.attname::text;

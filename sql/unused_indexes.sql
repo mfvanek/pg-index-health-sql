@@ -8,22 +8,24 @@
 -- Finds potentially unused indexes.
 -- This sql query have to be executed on all hosts in the cluster.
 -- The final result can be obtained as an intersection of results from all hosts.
-with foreign_key_indexes as (
-    select i.indexrelid
-    from
-        pg_catalog.pg_constraint c
-        join lateral unnest(c.conkey) with ordinality as u(attnum, attposition) on true
-        join pg_catalog.pg_index i on i.indrelid = c.conrelid and (c.conkey::int[] <@ i.indkey::int[])
-    where c.contype = 'f'
-)
+with
+    foreign_key_indexes as (
+        select i.indexrelid
+        from
+            pg_catalog.pg_constraint c
+            inner join lateral unnest(c.conkey) with ordinality u(attnum, attposition) on true
+            inner join pg_catalog.pg_index i on i.indrelid = c.conrelid and (c.conkey::int[] <@ i.indkey::int[])
+        where c.contype = 'f'
+    )
+
 select
     psui.relid::regclass::text as table_name,
     psui.indexrelid::regclass::text as index_name,
-    pg_relation_size(i.indexrelid) as index_size,
-    psui.idx_scan as index_scans
+    psui.idx_scan as index_scans,
+    pg_relation_size(i.indexrelid) as index_size
 from
     pg_catalog.pg_stat_user_indexes psui
-    join pg_catalog.pg_index i on psui.indexrelid = i.indexrelid
+    inner join pg_catalog.pg_index i on i.indexrelid = psui.indexrelid
 where
     psui.schemaname = :schema_name_param::text and
     not i.indisunique and

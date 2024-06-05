@@ -12,7 +12,7 @@ select
     pg_get_function_identity_arguments(p.oid) as function_signature
 from
     pg_catalog.pg_namespace n
-    join pg_catalog.pg_proc p on p.pronamespace = n.oid
+    inner join pg_catalog.pg_proc p on p.pronamespace = n.oid
 where
     (obj_description(p.oid) is null or length(trim(obj_description(p.oid))) = 0) and
     n.nspname = :schema_name_param::text

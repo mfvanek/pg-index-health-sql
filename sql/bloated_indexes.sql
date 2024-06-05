@@ -17,7 +17,7 @@
 -- Please note!
 -- The user on whose behalf this sql query will be executed
 -- have to have read permissions for the corresponding tables.
--- noqa: disable=PRS
+-- noqa: disable=PRS,ST06,AM06
 with indexes_data as (
     select
         pc.relname as inner_index_name,
@@ -31,13 +31,14 @@ with indexes_data as (
         pn.nspname
     from
         pg_catalog.pg_index pi
-        join pg_catalog.pg_class pc on pc.oid = pi.indexrelid
-        join pg_catalog.pg_namespace pn on pn.oid = pc.relnamespace
+        inner join pg_catalog.pg_class pc on pc.oid = pi.indexrelid
+        inner join pg_catalog.pg_namespace pn on pn.oid = pc.relnamespace
     where
         pc.relam = (select oid from pg_catalog.pg_am where amname = 'btree') and
         pc.relpages > 0 and
         pn.nspname = :schema_name_param::text
 ),
+
 nested_indexes_attributes as (
     select
         inner_index_name,
@@ -51,6 +52,7 @@ nested_indexes_attributes as (
         pg_catalog.generate_series(1, indnatts) as attpos
     from indexes_data
 ),
+
 named_indexes_attributes as (
     select
         ic.table_oid,
@@ -70,10 +72,11 @@ named_indexes_attributes as (
         case when a1.attnum is null then ic.inner_index_name else ct.relname end as attrelname
     from
         nested_indexes_attributes ic
-        join pg_catalog.pg_class ct on ct.oid = ic.table_oid
+        inner join pg_catalog.pg_class ct on ct.oid = ic.table_oid
         left join pg_catalog.pg_attribute a1 on ic.indkey[ic.attpos] <> 0 and a1.attrelid = ic.table_oid and a1.attnum = ic.indkey[ic.attpos]
         left join pg_catalog.pg_attribute a2 on ic.indkey[ic.attpos] = 0 and a2.attrelid = ic.index_oid and a2.attnum = ic.attpos
 ),
+
 rows_data_stats as (
     select
         i.table_oid,
@@ -97,10 +100,11 @@ rows_data_stats as (
         max(case when i.atttypid = 'pg_catalog.name'::regtype then 1 else 0 end) > 0 as stats_not_available
     from
         named_indexes_attributes i
-        join pg_catalog.pg_namespace n on n.oid = i.relnamespace
-        join pg_catalog.pg_stats s on s.schemaname = n.nspname and s.tablename = i.attrelname and s.attname = i.attname
+        inner join pg_catalog.pg_namespace n on n.oid = i.relnamespace
+        inner join pg_catalog.pg_stats s on s.schemaname = n.nspname and s.tablename = i.attrelname and s.attname = i.attname
     group by 1, 2, 3, 4, 5, 6, 7, 8, 9
 ),
+
 rows_header_stats as (
     select
         max_align,
@@ -125,6 +129,7 @@ rows_header_stats as (
         stats_not_available
     from rows_data_stats
 ),
+
 relation_stats as (
     select
         /* itemiddata size + computed avg size of a tuple (null_data_header_width) */
@@ -139,6 +144,7 @@ relation_stats as (
         stats_not_available
     from rows_header_stats
 ),
+
 corrected_relation_stats as (
     select
         table_name,
@@ -150,6 +156,7 @@ corrected_relation_stats as (
         stats_not_available
     from relation_stats
 ),
+
 bloat_stats as (
     select
         table_name,
@@ -160,6 +167,7 @@ bloat_stats as (
         stats_not_available
     from corrected_relation_stats
 )
+
 select *
 from bloat_stats
 where
