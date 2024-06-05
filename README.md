@@ -41,7 +41,7 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 17. Tables with [not valid constraints](https://habr.com/ru/articles/800121/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/check_not_valid_constraints.sql)).
 18. B-tree indexes [on array columns](https://habr.com/ru/articles/800121/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/btree_indexes_on_array_columns.sql)).
 19. [Sequence overflow](https://habr.com/ru/articles/800121/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/sequence_overflow.sql)).
-20. Primary keys with [serial types](https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_serial) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/primary_keys_with_serial_types.sql))
+20. Primary keys with [serial types](https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_serial) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/primary_keys_with_serial_types.sql)).
 
 ## Local development
 

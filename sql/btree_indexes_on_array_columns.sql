@@ -22,6 +22,6 @@ from pg_catalog.pg_index as i
     inner join pg_catalog.pg_attribute as col on i.indrelid = col.attrelid and col.attnum = any((string_to_array(i.indkey::text, ' ')::int2[])[:i.indnkeyatts])
     inner join pg_catalog.pg_type as typ on typ.oid = col.atttypid
 where
-	nsp.nspname = :schema_name_param::text and
-	typ.typcategory = 'A' -- A stands for Array type. See - https://www.postgresql.org/docs/current/catalog-pg-type.html#CATALOG-TYPCATEGORY-TABLE
+    nsp.nspname = :schema_name_param::text and
+    typ.typcategory = 'A' -- A stands for Array type. See - https://www.postgresql.org/docs/current/catalog-pg-type.html#CATALOG-TYPCATEGORY-TABLE
 order by ic.oid::regclass::text, i.indexrelid::regclass::text;

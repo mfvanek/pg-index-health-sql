@@ -150,7 +150,7 @@ corrected_relation_stats as (
         stats_not_available
     from relation_stats
 ),
- bloat_stats as (
+bloat_stats as (
     select
         table_name,
         index_name,
@@ -158,8 +158,8 @@ corrected_relation_stats as (
         block_size * pages_ff_diff as bloat_size,
         round(100 * block_size * pages_ff_diff / index_size::numeric, 2)::numeric(5, 2) as bloat_percentage,
         stats_not_available
-     from corrected_relation_stats
- )
+    from corrected_relation_stats
+)
 select *
 from bloat_stats
 where
