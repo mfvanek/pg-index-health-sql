@@ -1,8 +1,7 @@
 [sqlfluff]
 dialect = postgres
-exclude_rules = LT01
-warnings = LT02
-max_line_length = 180
+warnings = LT01
+max_line_length = 280
 templater = raw
 
 [sqlfluff:indentation]
