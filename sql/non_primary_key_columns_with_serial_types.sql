@@ -15,13 +15,14 @@ select
     case col.atttypid
         when 'int'::regtype then 'serial'
         when 'int8'::regtype then 'bigserial'
-        when 'int2'::regtype then 'smallserial' end as column_type,
+        when 'int2'::regtype then 'smallserial'
+    end as column_type,
     pg_get_serial_sequence(col.attrelid::regclass::text, col.attname) as sequence_name
 from
     pg_catalog.pg_class t
-    join pg_catalog.pg_namespace nsp on nsp.oid = t.relnamespace
-    join pg_catalog.pg_attribute col on col.attrelid = t.oid
-    join pg_attrdef ad on ad.adrelid = col.attrelid and ad.adnum = col.attnum
+    inner join pg_catalog.pg_namespace nsp on nsp.oid = t.relnamespace
+    inner join pg_catalog.pg_attribute col on col.attrelid = t.oid
+    inner join pg_attrdef ad on ad.adrelid = col.attrelid and ad.adnum = col.attnum
     left join lateral (
         select sum(case when c.contype = 'p' then +1 else -1 end) as res
         from pg_constraint c
@@ -30,7 +31,8 @@ from
             c.conkey[1] = col.attnum and
             c.contype in ('p', 'f') and /* primary or foreign key */
             array_length(c.conkey, 1) = 1 /* single column */
-        group by c.conrelid, c.conkey[1]) c on true
+        group by c.conrelid, c.conkey[1]
+    ) c on true
 where
     t.relkind = 'r' and
     col.attnum > 0 and /* to filter out system columns such as oid, ctid, xmin, xmax, etc. */

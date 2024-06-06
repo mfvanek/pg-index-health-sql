@@ -1,8 +1,7 @@
 [sqlfluff]
 dialect = postgres
-exclude_rules = LT01, LT02, LT03, LT08, AM03, AM05, AL01, AL05, ST06, ST09
-warnings = AM06, ST05
-max_line_length = 180
+warnings = LT01
+max_line_length = 280
 templater = raw
 
 [sqlfluff:indentation]
@@ -11,8 +10,20 @@ allow_implicit_indents = True
 indented_on_contents = False
 indented_ctes = True
 
-[sqlfluff:rules:layout.operators]
-operator_new_lines = before
+[sqlfluff:layout:type:binary_operator]
+line_position = trailing
+
+[sqlfluff:layout:type:comparison_operator]
+line_position = trailing
 
 [sqlfluff:rules:references.keywords]
 ignore_words = columns,toast
+
+[sqlfluff:rules:structure.join_condition_order]
+preferred_first_table_in_join_clause = later
+
+[sqlfluff:rules:aliasing.table]
+aliasing = implicit
+
+[sqlfluff:rules:aliasing.column]
+aliasing = explicit
