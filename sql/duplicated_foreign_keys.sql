@@ -26,22 +26,15 @@ with
             frel_att.atttypid as frel_att_type_id_2,
             frel_att.atttypmod as frel_att_type_mod_2,
             frel_att.attnotnull as frel_att_notnull_2
-        from pg_catalog.pg_constraint as c
-        cross join
-            lateral unnest(c.conkey)
-            with ordinality as fk_conkey(conkey_number, conkey_order)
-        left join
-            lateral unnest(c.confkey)
-            with ordinality as fk_confkey(confkey_number, confkey_order)
-            on fk_conkey.conkey_order = fk_confkey.confkey_order
-        left join pg_catalog.pg_attribute as rel_att
-            on
-                rel_att.attrelid = c.conrelid
-                and rel_att.attnum = fk_conkey.conkey_number
-        left join pg_catalog.pg_attribute as frel_att
-            on
-                frel_att.attrelid = c.confrelid
-                and frel_att.attnum = fk_confkey.confkey_number
+        from
+            pg_catalog.pg_constraint c
+            cross join lateral unnest(c.conkey) with ordinality fk_conkey(conkey_number, conkey_order)
+            left join lateral unnest(c.confkey) with ordinality fk_confkey(confkey_number, confkey_order)
+                on fk_confkey.confkey_order = fk_conkey.conkey_order
+            left join pg_catalog.pg_attribute rel_att
+                on rel_att.attrelid = c.conrelid and rel_att.attnum = fk_conkey.conkey_number
+            left join pg_catalog.pg_attribute frel_att
+                on frel_att.attrelid = c.confrelid and frel_att.attnum = fk_confkey.confkey_number
         where c.contype = 'f'
     ),
 
@@ -57,18 +50,16 @@ with
     )
 
 select
-    r_from.relname as table_name,
+    r_from.oid::regclass::text as table_name,
     c1.fk_name as constraint_name,
     c2.fk_name as duplicate_constraint_name
-from pg_catalog.pg_class as r_from
-inner join pg_catalog.pg_namespace as nsp
-    on r_from.relnamespace = nsp.oid
-inner join fk_with_attributes_grouped as c1
-    on r_from.oid = c1.conrelid
-inner join fk_with_attributes_grouped as c2
-    on
-        c1.fk_name < c2.fk_name
-        and c1.conrelid = c2.conrelid
-        and c1.confrelid = c2.confrelid
-        and c1.rel_att_names = c2.rel_att_names
-where nsp.nspname = :schema_name_param::text;
+from
+    pg_catalog.pg_class r_from
+    inner join pg_catalog.pg_namespace nsp on nsp.oid = r_from.relnamespace
+    inner join fk_with_attributes_grouped c1 on c1.conrelid = r_from.oid
+    inner join fk_with_attributes_grouped c2
+        on c2.fk_name > c1.fk_name and c2.conrelid = c1.conrelid and c2.confrelid = c1.confrelid and c2.rel_att_names = c1.rel_att_names
+where
+    r_from.relkind = 'r' and
+    nsp.nspname = :schema_name_param::text
+order by r_from.oid::regclass::text, c1.fk_name;

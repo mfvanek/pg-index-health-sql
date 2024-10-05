@@ -57,7 +57,7 @@ docker run \
   -e USE_FIND_ALGORITHM=true \
   -e VALIDATE_SQLFLUFF=true \
   -v $(pwd):/tmp/lint \
-  ghcr.io/super-linter/super-linter:slim-v6
+  ghcr.io/super-linter/super-linter:slim-v7
 ```
 
 #### Windows
@@ -70,5 +70,5 @@ docker run ^
   -e USE_FIND_ALGORITHM=true ^
   -e VALIDATE_SQLFLUFF=true ^
   -v "%cd%":/tmp/lint ^
-  ghcr.io/super-linter/super-linter:slim-v6
+  ghcr.io/super-linter/super-linter:slim-v7
 ```
