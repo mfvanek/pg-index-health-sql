@@ -11,10 +11,9 @@ select
     c.contype as constraint_type  -- Type of the constraint
 from
     pg_catalog.pg_constraint c
-    inner join pg_catalog.pg_class t on t.oid = c.conrelid
-    inner join pg_catalog.pg_namespace n on n.oid = t.relnamespace
+    inner join pg_catalog.pg_namespace nsp on nsp.oid = c.connamespace
 where
     not c.convalidated and -- Constraints that have not yet been validated
     c.contype in ('c', 'f') and -- Focus on check and foreign key constraints
-    n.nspname = :schema_name_param::text -- Make the query schema-aware
+    nsp.nspname = :schema_name_param::text -- Make the query schema-aware
 order by c.conrelid::regclass::text, c.conname;

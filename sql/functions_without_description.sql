@@ -8,12 +8,12 @@
 -- Finds functions and procedures that don't have a description.
 -- See also https://www.postgresql.org/docs/current/sql-comment.html
 select
-    case when n.nspname = 'public'::text then p.proname else n.nspname || '.' || p.proname end as function_name,
+    case when nsp.nspname = 'public'::text then p.proname else nsp.nspname || '.' || p.proname end as function_name,
     pg_get_function_identity_arguments(p.oid) as function_signature
 from
-    pg_catalog.pg_namespace n
-    inner join pg_catalog.pg_proc p on p.pronamespace = n.oid
+    pg_catalog.pg_namespace nsp
+    inner join pg_catalog.pg_proc p on p.pronamespace = nsp.oid
 where
     (obj_description(p.oid) is null or length(trim(obj_description(p.oid))) = 0) and
-    n.nspname = :schema_name_param::text
+    nsp.nspname = :schema_name_param::text
 order by function_name, function_signature;

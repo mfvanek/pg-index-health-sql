@@ -11,7 +11,7 @@ select
     pg_table_size(pc.oid) as table_size
 from
     pg_catalog.pg_class pc
-    inner join pg_catalog.pg_namespace pn on pn.oid = pc.relnamespace
+    inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
 where
     pc.relkind = 'r' and
     pc.oid not in (
@@ -19,5 +19,5 @@ where
         from pg_catalog.pg_constraint c
         where c.contype = 'p'
     ) and
-    pn.nspname = :schema_name_param::text
+    nsp.nspname = :schema_name_param::text
 order by pc.oid::regclass::text;

@@ -5,61 +5,49 @@
  * Licensed under the Apache License 2.0
  */
 
--- Finds potentially duplicated foreign keys
+-- Finds completely identical foreign keys
 --
 -- Based on query from https://habr.com/ru/articles/803841/
--- noqa: disable=PRS
 with
     fk_with_attributes as (
         select
-            c.conname as fk_name,
-            c.conrelid,
-            c.confrelid,
-            fk_conkey.conkey_order as att_order,
-            fk_conkey.conkey_number,
-            fk_confkey.confkey_number,
-            rel_att.attname as rel_att_name,
-            rel_att.atttypid as rel_att_type_id_1,
-            rel_att.atttypmod as rel_att_type_mod_1,
-            rel_att.attnotnull as rel_att_notnull_1,
-            frel_att.attname as frel_att_name,
-            frel_att.atttypid as frel_att_type_id_2,
-            frel_att.atttypmod as frel_att_type_mod_2,
-            frel_att.attnotnull as frel_att_notnull_2
+            c.conname as constraint_name,
+            c.conrelid as table_oid,
+            c.confrelid as foreign_table_oid,
+            u.attposition,
+            col.attname,
+            col.attnotnull
         from
             pg_catalog.pg_constraint c
-            cross join lateral unnest(c.conkey) with ordinality fk_conkey(conkey_number, conkey_order)
-            left join lateral unnest(c.confkey) with ordinality fk_confkey(confkey_number, confkey_order)
-                on fk_confkey.confkey_order = fk_conkey.conkey_order
-            left join pg_catalog.pg_attribute rel_att
-                on rel_att.attrelid = c.conrelid and rel_att.attnum = fk_conkey.conkey_number
-            left join pg_catalog.pg_attribute frel_att
-                on frel_att.attrelid = c.confrelid and frel_att.attnum = fk_confkey.confkey_number
-        where c.contype = 'f'
+            inner join pg_catalog.pg_namespace nsp on nsp.oid = c.connamespace
+            inner join lateral unnest(c.conkey) with ordinality u(attnum, attposition) on true
+            inner join pg_catalog.pg_attribute col on col.attrelid = c.conrelid and col.attnum = u.attnum
+        where
+            c.contype = 'f' and
+            nsp.nspname = :schema_name_param::text
     ),
 
     fk_with_attributes_grouped as (
         select
-            fk_name,
-            conrelid,
-            confrelid,
-            array_agg(rel_att_name order by att_order) as rel_att_names,
-            array_agg(frel_att_name order by att_order) as frel_att_names
+            constraint_name,
+            table_oid,
+            foreign_table_oid,
+            array_agg(attname || ', ' || attnotnull::text order by attposition) as columns
         from fk_with_attributes
-        group by fk_name, conrelid, confrelid
+        group by constraint_name, table_oid, foreign_table_oid
     )
 
 select
-    r_from.oid::regclass::text as table_name,
-    c1.fk_name as constraint_name,
-    c2.fk_name as duplicate_constraint_name
+    c1.table_oid::regclass::text as table_name,
+    c1.constraint_name,
+    c1.columns,
+    c2.constraint_name as duplicate_constraint_name,
+    c2.columns as duplicate_constraint_columns
 from
-    pg_catalog.pg_class r_from
-    inner join pg_catalog.pg_namespace nsp on nsp.oid = r_from.relnamespace
-    inner join fk_with_attributes_grouped c1 on c1.conrelid = r_from.oid
+    fk_with_attributes_grouped c1
     inner join fk_with_attributes_grouped c2
-        on c2.fk_name > c1.fk_name and c2.conrelid = c1.conrelid and c2.confrelid = c1.confrelid and c2.rel_att_names = c1.rel_att_names
-where
-    r_from.relkind = 'r' and
-    nsp.nspname = :schema_name_param::text
-order by r_from.oid::regclass::text, c1.fk_name;
+        on c2.constraint_name > c1.constraint_name and -- to prevent duplicated rows in output
+        c2.table_oid = c1.table_oid and
+        c2.foreign_table_oid = c1.foreign_table_oid and
+        c2.columns = c1.columns
+order by c1.table_oid::regclass::text, c1.constraint_name, c2.constraint_name;
