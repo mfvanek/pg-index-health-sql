@@ -27,17 +27,17 @@ with
             pi.indrelid as table_oid,
             pi.indexrelid as index_oid,
             pi.indnatts,
-            pn.nspname,
+            nsp.nspname,
             coalesce(substring(array_to_string(pc.reloptions, ' ') from 'fillfactor=([0-9]+)')::smallint, 90) as fill_factor,
             string_to_array(textin(int2vectorout(pi.indkey)), ' ')::int[] as indkey
         from
             pg_catalog.pg_index pi
             inner join pg_catalog.pg_class pc on pc.oid = pi.indexrelid
-            inner join pg_catalog.pg_namespace pn on pn.oid = pc.relnamespace
+            inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
         where
             pc.relam = (select oid from pg_catalog.pg_am where amname = 'btree') and
             pc.relpages > 0 and
-            pn.nspname = :schema_name_param::text
+            nsp.nspname = :schema_name_param::text
     ),
 
     nested_indexes_attributes as (
@@ -102,8 +102,8 @@ with
             max(case when i.atttypid = 'pg_catalog.name'::regtype then 1 else 0 end) > 0 as stats_not_available
         from
             named_indexes_attributes i
-            inner join pg_catalog.pg_namespace n on n.oid = i.relnamespace
-            inner join pg_catalog.pg_stats s on s.schemaname = n.nspname and s.tablename = i.attrelname and s.attname = i.attname
+            inner join pg_catalog.pg_namespace nsp on nsp.oid = i.relnamespace
+            inner join pg_catalog.pg_stats s on s.schemaname = nsp.nspname and s.tablename = i.attrelname and s.attname = i.attname
         group by 1, 2, 3, 4, 5, 6, 7, 8, 9
     ),
 
