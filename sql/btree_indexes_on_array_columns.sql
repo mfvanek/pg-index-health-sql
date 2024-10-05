@@ -10,9 +10,9 @@
 -- GIN-index should be used instead for such columns
 -- Based on query from https://habr.com/ru/articles/800121/
 select
-    i.indrelid::regclass as table_name,
-    i.indexrelid::regclass as index_name,
-    col.attname as column_name,
+    i.indrelid::regclass::text as table_name,
+    i.indexrelid::regclass::text as index_name,
+    col.attname::text as column_name,
     col.attnotnull as column_not_null,
     pg_relation_size(i.indexrelid) as index_size
 from pg_catalog.pg_index i
@@ -24,4 +24,4 @@ from pg_catalog.pg_index i
 where
     nsp.nspname = :schema_name_param::text and
     typ.typcategory = 'A' -- A stands for Array type. See - https://www.postgresql.org/docs/current/catalog-pg-type.html#CATALOG-TYPCATEGORY-TABLE
-order by ic.oid::regclass::text, i.indexrelid::regclass::text;
+order by table_name, index_name;

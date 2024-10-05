@@ -42,4 +42,4 @@ where
     /* column default value = nextval from owned sequence */
     pg_get_expr(ad.adbin, ad.adrelid) = 'nextval(''' || (pg_get_serial_sequence(col.attrelid::regclass::text, col.attname))::regclass || '''::regclass)' and
     nsp.nspname = :schema_name_param::text
-order by t.oid::regclass::text, col.attname::text;
+order by table_name, column_name;

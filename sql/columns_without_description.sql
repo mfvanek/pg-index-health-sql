@@ -20,4 +20,4 @@ where
     not col.attisdropped and
     (col_description(t.oid, col.attnum) is null or length(trim(col_description(t.oid, col.attnum))) = 0) and
     nsp.nspname = :schema_name_param::text
-order by t.oid::regclass::text, col.attname::text;
+order by table_name, column_name;

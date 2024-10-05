@@ -23,4 +23,4 @@ where
     not col.attisdropped and
     col.atttypid = 'json'::regtype and
     nsp.nspname = :schema_name_param::text
-order by t.oid::regclass::text, col.attname::text;
+order by table_name, column_name;

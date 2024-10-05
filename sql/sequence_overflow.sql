@@ -21,12 +21,12 @@ with
         from
             pg_sequence s
             inner join pg_class c on c.oid = s.seqrelid
-            left join pg_namespace n on n.oid = c.relnamespace
+            left join pg_namespace nsp on nsp.oid = c.relnamespace
         where
-            not pg_is_other_temp_schema(n.oid) and -- not temporary
+            not pg_is_other_temp_schema(nsp.oid) and -- not temporary
             c.relkind = 'S'::char and -- sequence object
             not s.seqcycle and -- skip cycle sequences
-            n.nspname = :schema_name_param::text
+            nsp.nspname = :schema_name_param::text
     ),
 
     sequence_state as (

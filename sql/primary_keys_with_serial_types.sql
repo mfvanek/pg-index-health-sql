@@ -12,8 +12,8 @@
 -- See also https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_serial
 -- and https://stackoverflow.com/questions/55300370/postgresql-serial-vs-identity
 select
-    col.attrelid::regclass as table_name,
-    col.attname as column_name,
+    col.attrelid::regclass::text as table_name,
+    col.attname::text as column_name,
     col.attnotnull as column_not_null,
     case col.atttypid
         when 'int'::regtype then 'serial'
@@ -33,4 +33,4 @@ where
     c.contype = 'p' and -- primary keys
     pg_get_expr(ad.adbin, ad.adrelid) = 'nextval(''' || pg_get_serial_sequence(col.attrelid::regclass::text, col.attname)::regclass || '''::regclass)' and
     nsp.nspname = :schema_name_param::text
-order by t.oid::regclass::text, col.attname::text;
+order by table_name, column_name;

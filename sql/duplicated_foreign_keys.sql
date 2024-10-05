@@ -32,7 +32,7 @@ with
             constraint_name,
             table_oid,
             foreign_table_oid,
-            array_agg(attname || ', ' || attnotnull::text order by attposition) as columns
+            array_agg(attname::text || ', ' || attnotnull::text order by attposition) as columns
         from fk_with_attributes
         group by constraint_name, table_oid, foreign_table_oid
     )
@@ -50,4 +50,4 @@ from
         c2.table_oid = c1.table_oid and
         c2.foreign_table_oid = c1.foreign_table_oid and
         c2.columns = c1.columns
-order by c1.table_oid::regclass::text, c1.constraint_name, c2.constraint_name;
+order by table_name, c1.constraint_name, c2.constraint_name;
