@@ -18,3 +18,4 @@ Each database structure check starts with an SQL query to the pg_catalog.
        psui.indexrelid::regclass::text as index_name,
    ```
 4. All query results must be ordered in some way.
+5. Do not forget to update `README.md`.
