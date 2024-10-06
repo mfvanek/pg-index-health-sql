@@ -24,7 +24,7 @@ with
     )
 
 select
-    a.indrelid::regclass as table_name,
+    a.indrelid::regclass::text as table_name,
     a.info || '; ' || b.info as intersected_indexes
 from
     (select * from index_info) a
@@ -34,4 +34,4 @@ from
         (b.cols like a.cols || '%' and coalesce(substr(b.cols, length(a.cols) + 1, 1), ' ') = ' ')
     ) and
     a.pred = b.pred)
-order by a.indrelid::regclass::text;
+order by table_name, intersected_indexes;

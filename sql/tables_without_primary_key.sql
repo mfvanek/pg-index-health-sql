@@ -20,4 +20,4 @@ where
         where c.contype = 'p'
     ) and
     nsp.nspname = :schema_name_param::text
-order by pc.oid::regclass::text;
+order by table_name;

@@ -35,14 +35,14 @@ with
         from
             pg_attribute pa
             inner join pg_class pc on pc.oid = pa.attrelid
-            inner join pg_namespace pn on pn.oid = pc.relnamespace
-            left join pg_stats ps on ps.schemaname = pn.nspname and ps.tablename = pc.relname and ps.inherited = false and ps.attname = pa.attname
+            inner join pg_namespace nsp on nsp.oid = pc.relnamespace
+            left join pg_stats ps on ps.schemaname = nsp.nspname and ps.tablename = pc.relname and ps.inherited = false and ps.attname = pa.attname
             left join pg_class toast on toast.oid = pc.reltoastrelid
         where
             not pa.attisdropped and
             pc.relkind = 'r' and
             pc.relpages > 0 and
-            pn.nspname = :schema_name_param::text
+            nsp.nspname = :schema_name_param::text
         group by table_oid, pc.reltuples, heap_pages, toast_pages, toast_tuples, fill_factor, block_size, page_header_size
     ),
 

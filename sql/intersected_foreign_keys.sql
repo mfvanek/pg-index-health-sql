@@ -5,7 +5,7 @@
  * Licensed under the Apache License 2.0
  */
 
--- Finds completely identical foreign keys
+-- Finds partially identical foreign keys (with overlapping sets of columns).
 --
 -- Based on query from https://habr.com/ru/articles/803841/
 with
@@ -41,13 +41,15 @@ select
     c1.table_oid::regclass::text as table_name,
     c1.constraint_name,
     c1.columns,
-    c2.constraint_name as duplicate_constraint_name,
-    c2.columns as duplicate_constraint_columns
+    c2.constraint_name as intersected_constraint_name,
+    c2.columns as intersected_constraint_columns
 from
     fk_with_attributes_grouped c1
     inner join fk_with_attributes_grouped c2
         on c2.constraint_name > c1.constraint_name and -- to prevent duplicated rows in output
         c2.table_oid = c1.table_oid and
         c2.foreign_table_oid = c1.foreign_table_oid and
-        c2.columns = c1.columns
+        c2.columns && c1.columns -- arrays overlap/have any elements in common?
+where
+    c2.columns != c1.columns -- skip full duplicates
 order by table_name, c1.constraint_name, c2.constraint_name;

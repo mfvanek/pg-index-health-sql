@@ -16,4 +16,4 @@ where
     pc.relkind = 'r' and
     (obj_description(pc.oid) is null or length(trim(obj_description(pc.oid))) = 0) and
     nsp.nspname = :schema_name_param::text
-order by pc.oid::regclass::text;
+order by table_name;
