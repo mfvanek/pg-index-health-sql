@@ -5,6 +5,9 @@
  * Licensed under the Apache License 2.0
  */
 
+-- Finds not validated constraints
+--
+-- Based on query from https://habr.com/ru/articles/800121/
 select
     c.conrelid::regclass::text as table_name, -- Name of the table
     c.conname as constraint_name, -- Name of the constraint
