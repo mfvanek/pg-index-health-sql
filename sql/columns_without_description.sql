@@ -5,7 +5,8 @@
  * Licensed under the Apache License 2.0
  */
 
--- Finds columns that don't have a description. See also https://www.postgresql.org/docs/current/sql-comment.html
+-- Finds columns that don't have a description.
+-- See also https://www.postgresql.org/docs/current/sql-comment.html
 select
     t.oid::regclass::text as table_name,
     col.attname::text as column_name,

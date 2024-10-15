@@ -7,6 +7,7 @@
 
 -- Finds columns of serial types (smallserial/serial/bigserial)
 -- that are not primary keys (or primary and foreign keys at the same time).
+--
 -- Based on https://dba.stackexchange.com/questions/90555/postgresql-select-primary-key-as-serial-or-bigserial/
 select
     col.attrelid::regclass::text as table_name,
