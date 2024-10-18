@@ -31,9 +31,10 @@ with
                 when 'v' then 'view'
                 when 'm' then 'materialized view'
             end as object_type
-        from pg_catalog.pg_class pc
-        inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
-        inner join t on t.max_identifier_length = length(pc.relname)
+        from
+            pg_catalog.pg_class pc
+            inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
+            inner join t on t.max_identifier_length = length(pc.relname)
         where
             pc.relkind in ('r', 'i', 'S', 'v', 'm') and
             nsp.nspname = :schema_name_param::text
@@ -43,9 +44,10 @@ with
         select
             case when nsp.nspname = 'public' then p.proname else nsp.nspname || '.' || p.proname end as object_name,
             'function' as object_type
-        from pg_proc p
-        inner join pg_catalog.pg_namespace nsp on nsp.oid = p.pronamespace
-        inner join t on t.max_identifier_length = length(p.proname)
+        from
+            pg_catalog.pg_proc p
+            inner join pg_catalog.pg_namespace nsp on nsp.oid = p.pronamespace
+            inner join t on t.max_identifier_length = length(p.proname)
         where
             nsp.nspname = :schema_name_param::text
 
@@ -54,9 +56,10 @@ with
         select
             case when nsp.nspname = 'public' then c.conname else nsp.nspname || '.' || c.conname end as object_name,
             'constraint' as object_type
-        from pg_constraint c
-        inner join pg_catalog.pg_namespace nsp on c.connamespace = nsp.oid
-        inner join t on t.max_identifier_length = length(c.conname)
+        from
+            pg_catalog.pg_constraint c
+            inner join pg_catalog.pg_namespace nsp on nsp.oid = c.connamespace
+            inner join t on t.max_identifier_length = length(c.conname)
         where
             nsp.nspname = :schema_name_param::text
     )
