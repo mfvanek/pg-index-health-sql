@@ -44,6 +44,7 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 20. Primary keys with [serial types](https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_serial) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/primary_keys_with_serial_types.sql)).
 21. Duplicated (completely identical) foreign keys ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/duplicated_foreign_keys.sql)).
 22. Intersected (partially identical) foreign keys ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/intersected_foreign_keys.sql)).
+23. Objects with possible name overflow ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/possible_object_name_overflow.sql)).
 
 ## Local development
 
