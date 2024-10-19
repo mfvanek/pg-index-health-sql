@@ -21,6 +21,15 @@ with
         select current_setting('max_identifier_length')::int as max_identifier_length
     ),
 
+    nsp as (
+        select
+            nsp.oid,
+            nsp.nspname
+        from pg_catalog.pg_namespace nsp
+        where
+            nsp.nspname = :schema_name_param::text
+    ),
+
     long_names as (
         select
             pc.oid::regclass::text as object_name,
@@ -33,11 +42,10 @@ with
             end as object_type
         from
             pg_catalog.pg_class pc
-            inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
+            inner join nsp on nsp.oid = pc.relnamespace
             inner join t on t.max_identifier_length = length(pc.relname)
         where
-            pc.relkind in ('r', 'i', 'S', 'v', 'm') and
-            nsp.nspname = :schema_name_param::text
+            pc.relkind in ('r', 'i', 'S', 'v', 'm')
 
         union all
 
@@ -46,10 +54,8 @@ with
             'function' as object_type
         from
             pg_catalog.pg_proc p
-            inner join pg_catalog.pg_namespace nsp on nsp.oid = p.pronamespace
+            inner join nsp on nsp.oid = p.pronamespace
             inner join t on t.max_identifier_length = length(p.proname)
-        where
-            nsp.nspname = :schema_name_param::text
 
         union all
 
@@ -58,10 +64,8 @@ with
             'constraint' as object_type
         from
             pg_catalog.pg_constraint c
-            inner join pg_catalog.pg_namespace nsp on nsp.oid = c.connamespace
+            inner join nsp on nsp.oid = c.connamespace
             inner join t on t.max_identifier_length = length(c.conname)
-        where
-            nsp.nspname = :schema_name_param::text
     )
 
 select *
