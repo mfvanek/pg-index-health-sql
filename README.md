@@ -45,6 +45,7 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 21. Duplicated (completely identical) foreign keys ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/duplicated_foreign_keys.sql)).
 22. Intersected (partially identical) foreign keys ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/intersected_foreign_keys.sql)).
 23. Objects with possible name overflow ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/possible_object_name_overflow.sql)).
+24. Tables not linked to other tables ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_not_linked_to_others.sql)).
 
 ## Local development
 
