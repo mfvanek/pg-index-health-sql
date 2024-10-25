@@ -5,8 +5,14 @@
  * Licensed under the Apache License 2.0
  */
 
--- Finds TODO
+-- Finds foreign keys where the type of the constrained column does not match the type in the referenced table.
 --
+-- The column types in the referring and target relation must match.
+-- For example, a column with the integer type should refer to a column with the integer type.
+-- This eliminates unnecessary conversions at the DBMS level and in the application code,
+-- and reduces the number of errors that may appear due to type inconsistencies in the future.
+--
+-- See https://www.postgresql.org/docs/current/catalog-pg-constraint.html
 -- Based on query from https://habr.com/ru/articles/803841/
 with
     fk_with_attributes as (
