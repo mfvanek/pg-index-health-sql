@@ -47,6 +47,7 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 22. Intersected (partially identical) foreign keys ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/intersected_foreign_keys.sql)).
 23. Objects with possible name overflow ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/possible_object_name_overflow.sql)).
 24. Tables not linked to other tables ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_not_linked_to_others.sql)).
+25. Foreign keys [with unmatched column type](https://habr.com/ru/articles/803841/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/foreign_keys_with_unmatched_column_type.sql)).
 
 ## Local development
 

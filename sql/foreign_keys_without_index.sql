@@ -10,7 +10,7 @@
 select
     c.conrelid::regclass::text as table_name,
     c.conname as constraint_name,
-    array_agg(col.attname::text || ', ' || col.attnotnull::text order by u.attposition) as columns
+    array_agg(col.attname::text || ',' || col.attnotnull::text order by u.attposition) as columns
 from
     pg_catalog.pg_constraint c
     inner join lateral unnest(c.conkey) with ordinality u(attnum, attposition) on true
