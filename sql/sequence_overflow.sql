@@ -22,9 +22,9 @@ with
                 else null::bigint
             end as last_value
         from
-            pg_sequence s
-            inner join pg_class c on c.oid = s.seqrelid
-            left join pg_namespace nsp on nsp.oid = c.relnamespace
+            pg_catalog.pg_sequence s
+            inner join pg_catalog.pg_class c on c.oid = s.seqrelid
+            left join pg_catalog.pg_namespace nsp on nsp.oid = c.relnamespace
         where
             not pg_is_other_temp_schema(nsp.oid) and -- not temporary
             c.relkind = 'S'::char and -- sequence object
