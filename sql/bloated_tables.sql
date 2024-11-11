@@ -33,11 +33,11 @@ with
             sum((1 - coalesce(ps.null_frac, 0)) * coalesce(ps.avg_width, 0)) as null_data_width,
             bool_or(pa.atttypid = 'pg_catalog.name'::regtype) or sum(case when pa.attnum > 0 then 1 else 0 end) <> count(ps.attname) as stats_not_available
         from
-            pg_attribute pa
-            inner join pg_class pc on pc.oid = pa.attrelid
-            inner join pg_namespace nsp on nsp.oid = pc.relnamespace
-            left join pg_stats ps on ps.schemaname = nsp.nspname and ps.tablename = pc.relname and ps.inherited = false and ps.attname = pa.attname
-            left join pg_class toast on toast.oid = pc.reltoastrelid
+            pg_catalog.pg_attribute pa
+            inner join pg_catalog.pg_class pc on pc.oid = pa.attrelid
+            inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
+            left join pg_catalog.pg_stats ps on ps.schemaname = nsp.nspname and ps.tablename = pc.relname and ps.inherited = false and ps.attname = pa.attname
+            left join pg_catalog.pg_class toast on toast.oid = pc.reltoastrelid
         where
             not pa.attisdropped and
             pc.relkind = 'r' and
