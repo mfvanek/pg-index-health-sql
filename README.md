@@ -7,7 +7,6 @@
 
 ## Supported PostgreSQL versions
 
-[![PostgreSQL 12](https://img.shields.io/badge/PostgreSQL-12-green.svg)](https://www.postgresql.org/about/news/1976/ "PostgreSQL 12")
 [![PostgreSQL 13](https://img.shields.io/badge/PostgreSQL-13-green.svg)](https://www.postgresql.org/about/news/postgresql-13-released-2077/ "PostgreSQL 13")
 [![PostgreSQL 14](https://img.shields.io/badge/PostgreSQL-14-green.svg)](https://www.postgresql.org/about/news/postgresql-14-released-2318/ "PostgreSQL 14")
 [![PostgreSQL 15](https://img.shields.io/badge/PostgreSQL-15-green.svg)](https://www.postgresql.org/about/news/postgresql-15-released-2526/ "PostgreSQL 15")
@@ -16,7 +15,7 @@
 
 ### Support for previous versions of PostgreSQL
 
-Compatibility with PostgreSQL versions **9.6**, **10** and **11** is no longer guaranteed, but it is very likely.  
+Compatibility with PostgreSQL versions **10**, **11** and **12** is no longer guaranteed, but it is very likely.  
 We focus only on the currently maintained versions of PostgreSQL.  
 For more information please see [PostgreSQL Versioning Policy](https://www.postgresql.org/support/versioning/).
 
@@ -77,4 +76,12 @@ docker run ^
   -e VALIDATE_SQLFLUFF=true ^
   -v "%cd%":/tmp/lint ^
   ghcr.io/super-linter/super-linter:slim-v7
+```
+
+```shell
+docker run --rm ^
+  -v "%cd%\.github\linters\.sqlfluff":/sql/.sqlfluff:ro ^
+  -v "%cd%":/sql ^
+  -e SQLFLUFF_CONFIG=/sql/.sqlfluff ^
+  sqlfluff/sqlfluff:3.1.0 lint /sql
 ```
