@@ -148,7 +148,11 @@ with
     ),
 
     corrected_relation_stats as (
-        select table_name,index_name,index_size,block_size,
+        select
+            table_name,
+            index_name,
+            index_size,
+            block_size,
             relpages,
             (case when relpages - estimated_pages_count > 0 then relpages - estimated_pages_count else 0 end)::bigint as pages_ff_diff,
             stats_not_available
