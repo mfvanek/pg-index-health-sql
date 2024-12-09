@@ -12,7 +12,7 @@ select
 from (
     select
         x.indexrelid::regclass as idx,
-        x.indrelid::regclass::text as table_name, -- cast to text for sorting purposes
+        x.indrelid::regclass::text as table_name, /* cast to text for sorting purposes */
         (
             x.indrelid::text || ' ' || x.indclass::text || ' ' || x.indkey::text || ' ' ||
             x.indcollation::text || ' ' ||

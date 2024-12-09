@@ -9,6 +9,7 @@
 --
 -- GIN-index should be used instead for such columns
 -- Based on query from https://habr.com/ru/articles/800121/
+-- See also https://www.postgresql.org/docs/current/catalog-pg-type.html#CATALOG-TYPCATEGORY-TABLE
 select
     i.indrelid::regclass::text as table_name,
     i.indexrelid::regclass::text as index_name,
@@ -23,5 +24,5 @@ from pg_catalog.pg_index i
     inner join pg_catalog.pg_type typ on typ.oid = col.atttypid
 where
     nsp.nspname = :schema_name_param::text and
-    typ.typcategory = 'A' -- A stands for Array type. See - https://www.postgresql.org/docs/current/catalog-pg-type.html#CATALOG-TYPCATEGORY-TABLE
+    typ.typcategory = 'A' /* A stands for Array type */
 order by table_name, index_name;

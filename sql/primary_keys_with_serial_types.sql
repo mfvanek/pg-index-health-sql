@@ -17,6 +17,7 @@ with
             col.attrelid::regclass::text as table_name,
             col.attname::text as column_name,
             col.attnotnull as column_not_null,
+            nsp.nspname as schema_name,
             case col.atttypid
                 when 'int'::regtype then 'serial'
                 when 'int8'::regtype then 'bigserial'
@@ -26,8 +27,7 @@ with
             case when has_schema_privilege(nsp.oid, 'create,usage'::text)
                 then pg_get_serial_sequence(col.attrelid::regclass::text, col.attname)
                 else null::text
-            end as sequence_name,
-            nsp.nspname as schema_name
+            end as sequence_name
         from
             pg_catalog.pg_class t
             inner join pg_catalog.pg_namespace nsp on nsp.oid = t.relnamespace
@@ -37,9 +37,10 @@ with
         where
             col.atttypid = any('{int,int8,int2}'::regtype[]) and
             not col.attisdropped and
-            c.contype = 'p' and -- primary keys
+            c.contype = 'p' and /* primary keys */
             nsp.nspname = :schema_name_param::text
     )
+
 select
     table_name,
     column_name,
