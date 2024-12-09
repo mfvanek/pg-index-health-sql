@@ -13,7 +13,8 @@ from
     pg_catalog.pg_class pc
     inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
 where
-    pc.relkind = 'r' and
+    pc.relkind in ('r', 'p') and
+    not pc.relispartition and
     (obj_description(pc.oid) is null or length(trim(obj_description(pc.oid))) = 0) and
     nsp.nspname = :schema_name_param::text
 order by table_name;
