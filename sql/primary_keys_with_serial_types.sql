@@ -24,8 +24,8 @@ with
                 when 'int2'::regtype then 'smallserial'
             end as column_type,
             pg_get_expr(ad.adbin, ad.adrelid) as column_default_value,
-            case when has_schema_privilege(nsp.oid, 'create,usage'::text)
-                then pg_get_serial_sequence(col.attrelid::regclass::text, col.attname)
+            case
+                when has_schema_privilege(nsp.oid, 'create,usage'::text) then pg_get_serial_sequence(col.attrelid::regclass::text, col.attname)
                 else null::text
             end as sequence_name
         from
