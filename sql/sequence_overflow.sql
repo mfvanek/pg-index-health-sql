@@ -26,9 +26,9 @@ with
             inner join pg_catalog.pg_class c on c.oid = s.seqrelid
             left join pg_catalog.pg_namespace nsp on nsp.oid = c.relnamespace
         where
-            not pg_is_other_temp_schema(nsp.oid) and -- not temporary
-            c.relkind = 'S'::char and -- sequence object
-            not s.seqcycle and -- skip cycle sequences
+            not pg_is_other_temp_schema(nsp.oid) and /* not temporary */
+            c.relkind = 'S'::char and /* sequence object */
+            not s.seqcycle and /* skip cycle sequences */
             nsp.nspname = :schema_name_param::text
     ),
 
@@ -37,10 +37,10 @@ with
             t.sequence_name,
             t.data_type,
             case
-                -- ascending or descending sequence
+                /* ascending or descending sequence */
                 when t.increment_by > 0 then 100.0 * (t.max_value - coalesce(t.last_value, t.start_value)) / (t.max_value - t.min_value)
                 else 100.0 * (coalesce(t.last_value, t.start_value) - t.min_value) / (t.max_value - t.min_value)
-            end ::numeric(5, 2) as remaining_percentage -- percentage of remaining values
+            end ::numeric(5, 2) as remaining_percentage /* percentage of remaining values */
         from all_sequences t
     )
 

@@ -9,7 +9,7 @@
 select
     x.indrelid::regclass::text as table_name,
     x.indexrelid::regclass::text as index_name,
-    string_agg(a.attname, ', ') as nullable_fields, -- In fact, there will always be only one column.
+    string_agg(a.attname, ', ') as nullable_fields, /* in fact, there will always be only one column */
     pg_relation_size(x.indexrelid) as index_size
 from
     pg_catalog.pg_index x
