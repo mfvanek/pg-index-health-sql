@@ -47,5 +47,6 @@ from
     inner join nsp on nsp.oid = pc.relnamespace
 where
     pc.relkind in ('r', 'p') and
+    not pc.relispartition and
     pc.oid not in (select * from fkeys)
 order by table_name;
