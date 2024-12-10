@@ -13,7 +13,8 @@ from
     pg_catalog.pg_class pc
     inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
 where
-    pc.relkind = 'r' and
+    pc.relkind in ('r', 'p') and
+    /* here we do not filter by pc.relispartition, because very often primary keys are created only for partitions */
     pc.oid not in (
         select c.conrelid as table_oid
         from pg_catalog.pg_constraint c
