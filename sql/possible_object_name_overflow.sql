@@ -39,13 +39,16 @@ with
                 when 'S' then 'sequence'
                 when 'v' then 'view'
                 when 'm' then 'materialized view'
+                when 'p' then 'partitioned table'
+                when 'I' then 'partitioned index'
             end as object_type
         from
             pg_catalog.pg_class pc
             inner join nsp on nsp.oid = pc.relnamespace
             inner join t on t.max_identifier_length = length(pc.relname)
         where
-            pc.relkind in ('r', 'i', 'S', 'v', 'm')
+            pc.relkind in ('r', 'i', 'S', 'v', 'm', 'p', 'I')
+            /* decided not to filter by the pc.relispartition field here */
 
         union all
 

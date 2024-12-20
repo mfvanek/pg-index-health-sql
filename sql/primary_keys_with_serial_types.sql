@@ -12,33 +12,38 @@
 -- See also https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_serial
 -- and https://stackoverflow.com/questions/55300370/postgresql-serial-vs-identity
 with
+    nsp as (
+        select nsp.oid
+        from pg_catalog.pg_namespace nsp
+        where
+            nsp.nspname = :schema_name_param::text
+    ),
+
     t as (
         select
             col.attrelid::regclass::text as table_name,
             col.attname::text as column_name,
             col.attnotnull as column_not_null,
-            nsp.nspname as schema_name,
+            s.seqrelid::regclass::text as sequence_name,
             case col.atttypid
                 when 'int'::regtype then 'serial'
                 when 'int8'::regtype then 'bigserial'
                 when 'int2'::regtype then 'smallserial'
             end as column_type,
-            pg_get_expr(ad.adbin, ad.adrelid) as column_default_value,
-            case
-                when has_schema_privilege(nsp.oid, 'create,usage'::text) then pg_get_serial_sequence(col.attrelid::regclass::text, col.attname)
-                else null::text
-            end as sequence_name
+            pg_get_expr(ad.adbin, ad.adrelid) as column_default_value
         from
             pg_catalog.pg_class t
-            inner join pg_catalog.pg_namespace nsp on nsp.oid = t.relnamespace
+            inner join nsp on nsp.oid = t.relnamespace
             inner join pg_catalog.pg_attribute col on col.attrelid = t.oid
-            inner join pg_catalog.pg_attrdef ad on ad.adrelid = col.attrelid and ad.adnum = col.attnum
             inner join pg_catalog.pg_constraint c on c.conrelid = col.attrelid and col.attnum = any(c.conkey)
+            inner join pg_catalog.pg_attrdef ad on ad.adrelid = col.attrelid and ad.adnum = col.attnum
+            inner join pg_catalog.pg_depend dep on dep.refobjid = col.attrelid and dep.refobjsubid = col.attnum
+            inner join pg_catalog.pg_sequence s on s.seqrelid = dep.objid
         where
             col.atttypid = any('{int,int8,int2}'::regtype[]) and
             not col.attisdropped and
             c.contype = 'p' and /* primary keys */
-            nsp.nspname = :schema_name_param::text
+            dep.deptype = 'a' /* DEPENDENCY_AUTO */
     )
 
 select
@@ -46,9 +51,8 @@ select
     column_name,
     column_not_null,
     column_type,
-    case when schema_name = 'public'::text then replace(sequence_name, 'public.', '') else sequence_name end as sequence_name
+    sequence_name
 from t
 where
-    sequence_name is not null and
-    column_default_value = 'nextval(''' || sequence_name::regclass || '''::regclass)'
+    column_default_value = 'nextval(''' || sequence_name || '''::regclass)'
 order by table_name, column_name;
