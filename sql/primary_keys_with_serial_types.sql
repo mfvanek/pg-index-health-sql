@@ -13,8 +13,7 @@
 -- and https://stackoverflow.com/questions/55300370/postgresql-serial-vs-identity
 with
     nsp as (
-        select
-            nsp.oid
+        select nsp.oid
         from pg_catalog.pg_namespace nsp
         where
             nsp.nspname = :schema_name_param::text
@@ -25,12 +24,12 @@ with
             col.attrelid::regclass::text as table_name,
             col.attname::text as column_name,
             col.attnotnull as column_not_null,
+            s.seqrelid::regclass::text as sequence_name,
             case col.atttypid
                 when 'int'::regtype then 'serial'
                 when 'int8'::regtype then 'bigserial'
                 when 'int2'::regtype then 'smallserial'
             end as column_type,
-            s.seqrelid::regclass::text as sequence_name,
             pg_get_expr(ad.adbin, ad.adrelid) as column_default_value
         from
             pg_catalog.pg_class t
@@ -38,7 +37,7 @@ with
             inner join pg_catalog.pg_attribute col on col.attrelid = t.oid
             inner join pg_catalog.pg_constraint c on c.conrelid = col.attrelid and col.attnum = any(c.conkey)
             inner join pg_catalog.pg_attrdef ad on ad.adrelid = col.attrelid and ad.adnum = col.attnum
-            inner join pg_catalog.pg_depend dep on dep.refobjid = col.attrelid AND dep.refobjsubid = col.attnum
+            inner join pg_catalog.pg_depend dep on dep.refobjid = col.attrelid and dep.refobjsubid = col.attnum
             inner join pg_catalog.pg_sequence s on s.seqrelid = dep.objid
         where
             col.atttypid = any('{int,int8,int2}'::regtype[]) and
