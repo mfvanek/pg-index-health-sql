@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024. Ivan Vakhrushev and others.
+ * Copyright (c) 2019-2025. Ivan Vakhrushev and others.
  * https://github.com/mfvanek/pg-index-health-sql
  *
  * Licensed under the Apache License 2.0
@@ -8,6 +8,7 @@
 -- Finds potentially unused indexes.
 -- This sql query have to be executed on all hosts in the cluster.
 -- The final result can be obtained as an intersection of results from all hosts.
+-- noqa: disable=RF02
 with
     foreign_key_indexes as (
         select i.indexrelid

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024. Ivan Vakhrushev and others.
+ * Copyright (c) 2019-2025. Ivan Vakhrushev and others.
  * https://github.com/mfvanek/pg-index-health-sql
  *
  * Licensed under the Apache License 2.0
@@ -8,7 +8,7 @@
 -- Finds indexes with overlapping sets of columns.
 -- For example, (A) and (A+B) and (A+B+C).
 -- Some of these indexes can usually be safely deleted.
--- noqa: disable=ST09,ST05
+-- noqa: disable=ST09,ST05,RF02
 with
     index_info as (
         select

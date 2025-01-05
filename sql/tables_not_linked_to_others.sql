@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2024. Ivan Vakhrushev and others.
+ * Copyright (c) 2019-2025. Ivan Vakhrushev and others.
  * https://github.com/mfvanek/pg-index-health-sql
  *
  * Licensed under the Apache License 2.0
@@ -22,7 +22,7 @@ with
     ),
 
     fkeys as (
-        select c.conrelid
+        select c.conrelid as fk_oid
         from
             pg_catalog.pg_constraint c
             inner join nsp on nsp.oid = c.connamespace
@@ -31,7 +31,7 @@ with
 
         union
 
-        select c.confrelid
+        select c.confrelid as fk_oid
         from
             pg_catalog.pg_constraint c
             inner join nsp on nsp.oid = c.connamespace
@@ -48,5 +48,5 @@ from
 where
     pc.relkind in ('r', 'p') and
     not pc.relispartition and
-    pc.oid not in (select * from fkeys)
+    pc.oid not in (select f.fk_oid from fkeys f)
 order by table_name;
