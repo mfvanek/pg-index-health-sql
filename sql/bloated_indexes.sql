@@ -35,7 +35,7 @@ with
             inner join pg_catalog.pg_class pc on pc.oid = pi.indexrelid
             inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
         where
-            pc.relam = (select oid from pg_catalog.pg_am where amname = 'btree') and
+            pc.relam = (select am.oid from pg_catalog.pg_am am where am.amname = 'btree') and
             pc.relpages > 0 and
             nsp.nspname = :schema_name_param::text
     ),

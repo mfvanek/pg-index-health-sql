@@ -19,7 +19,7 @@ select
 from pg_catalog.pg_index i
     inner join pg_catalog.pg_class ic on ic.oid = i.indexrelid
     inner join pg_catalog.pg_namespace nsp on nsp.oid = ic.relnamespace
-    inner join pg_catalog.pg_am a on a.oid = ic.relam and a.amname = 'btree'
+    inner join pg_catalog.pg_am am on am.oid = ic.relam and am.amname = 'btree'
     inner join pg_catalog.pg_attribute col on col.attrelid = i.indrelid and col.attnum = any((string_to_array(i.indkey::text, ' ')::int2[])[:i.indnkeyatts])
     inner join pg_catalog.pg_type typ on typ.oid = col.atttypid
 where

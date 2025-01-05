@@ -8,6 +8,7 @@
 -- Finds potentially unused indexes.
 -- This sql query have to be executed on all hosts in the cluster.
 -- The final result can be obtained as an intersection of results from all hosts.
+-- noqa: disable=RF02
 with
     foreign_key_indexes as (
         select i.indexrelid
