@@ -42,7 +42,8 @@ with
                 group by c.conrelid, c.conkey[1]
             ) c on true
         where
-            t.relkind = 'r' and
+            t.relkind in ('r', 'p') and
+            not t.relispartition and
             col.attnum > 0 and /* to filter out system columns such as oid, ctid, xmin, xmax, etc. */
             not col.attisdropped and
             col.atttypid = any('{int,int8,int2}'::regtype[]) and
