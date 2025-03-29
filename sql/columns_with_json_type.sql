@@ -18,7 +18,8 @@ from
     inner join pg_catalog.pg_namespace nsp on nsp.oid = t.relnamespace
     inner join pg_catalog.pg_attribute col on col.attrelid = t.oid
 where
-    t.relkind = 'r' and
+    t.relkind in ('r', 'p') and
+    not t.relispartition and
     col.attnum > 0 and /* to filter out system columns such as oid, ctid, xmin, xmax, etc. */
     not col.attisdropped and
     col.atttypid = 'json'::regtype and
