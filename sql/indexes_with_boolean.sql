@@ -22,5 +22,6 @@ where
     not pi.indisunique and
     pi.indisready and
     pi.indisvalid and
+    not pc.relispartition and
     col.atttypid = 'boolean'::regtype
 order by table_name, index_name;
