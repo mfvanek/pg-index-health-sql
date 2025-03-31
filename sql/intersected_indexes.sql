@@ -19,8 +19,11 @@ with
             coalesce(pg_get_expr(pi.indpred, pi.indrelid, true), '') as pred
         from
             pg_catalog.pg_index pi
-            inner join pg_catalog.pg_stat_all_indexes psai on psai.indexrelid = pi.indexrelid
-        where psai.schemaname = :schema_name_param::text
+            inner join pg_catalog.pg_class pc on pc.oid = pi.indexrelid
+            inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
+        where
+            nsp.nspname = :schema_name_param::text and
+            not pc.relispartition
     )
 
 select
