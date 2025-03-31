@@ -21,8 +21,11 @@ from (
         ) as grouping_key
     from
         pg_catalog.pg_index x
-        inner join pg_catalog.pg_stat_all_indexes psai on psai.indexrelid = x.indexrelid
-    where psai.schemaname = :schema_name_param::text
+        inner join pg_catalog.pg_class pc on pc.oid = x.indexrelid
+        inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
+    where
+        nsp.nspname = :schema_name_param::text and
+        not pc.relispartition
 ) sub
 group by table_name, grouping_key
 having count(*) > 1
