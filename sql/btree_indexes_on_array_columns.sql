@@ -24,5 +24,6 @@ from pg_catalog.pg_index i
     inner join pg_catalog.pg_type typ on typ.oid = col.atttypid
 where
     nsp.nspname = :schema_name_param::text and
+    not ic.relispartition and
     typ.typcategory = 'A' /* A stands for Array type */
 order by table_name, index_name;
