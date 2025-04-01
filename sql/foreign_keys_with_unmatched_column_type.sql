@@ -39,6 +39,7 @@ with
             inner join pg_catalog.pg_attribute foreign_col on foreign_col.attrelid = c.confrelid and foreign_col.attnum = foreign_u.attnum
         where
             c.contype = 'f' and
+            c.conparentid = 0 and c.coninhcount = 0 and /* not a constraint in a partition */
             nsp.nspname = :schema_name_param::text
     ),
 

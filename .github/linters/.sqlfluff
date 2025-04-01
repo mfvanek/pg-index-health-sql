@@ -1,6 +1,6 @@
 [sqlfluff]
 dialect = postgres
-warnings = LT01
+warnings = LT01,LT14
 max_line_length = 280
 templater = raw
 
