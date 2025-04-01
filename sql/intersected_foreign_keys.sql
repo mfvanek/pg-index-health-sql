@@ -24,6 +24,7 @@ with
             inner join pg_catalog.pg_attribute col on col.attrelid = c.conrelid and col.attnum = u.attnum
         where
             c.contype = 'f' and
+            c.conparentid = 0 and c.coninhcount = 0 and /* not a constraint in a partition */
             nsp.nspname = :schema_name_param::text
     ),
 
