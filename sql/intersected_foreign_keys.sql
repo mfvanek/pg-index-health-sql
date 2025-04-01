@@ -8,6 +8,7 @@
 -- Finds partially identical foreign keys (with overlapping sets of columns).
 --
 -- Based on query from https://habr.com/ru/articles/803841/
+-- noqa: disable=LT14
 with
     fk_with_attributes as (
         select
@@ -24,6 +25,7 @@ with
             inner join pg_catalog.pg_attribute col on col.attrelid = c.conrelid and col.attnum = u.attnum
         where
             c.contype = 'f' and
+            c.conparentid = 0 and c.coninhcount = 0 and /* not a constraint in a partition */
             nsp.nspname = :schema_name_param::text
     ),
 
