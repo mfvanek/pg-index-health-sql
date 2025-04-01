@@ -8,6 +8,7 @@
 -- Finds completely identical foreign keys
 --
 -- Based on query from https://habr.com/ru/articles/803841/
+-- noqa: disable=LT14
 with
     fk_with_attributes as (
         select
