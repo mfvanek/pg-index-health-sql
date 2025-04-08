@@ -53,7 +53,7 @@ with
         union all
 
         select
-            case when nsp.nspname = 'public' then p.proname else nsp.nspname || '.' || p.proname end as object_name,
+            case when nsp.nspname = 'public' then quote_ident(p.proname) else quote_ident(nsp.nspname) || '.' || quote_ident(p.proname) end as object_name,
             'function' as object_type
         from
             pg_catalog.pg_proc p
@@ -63,7 +63,7 @@ with
         union all
 
         select
-            case when nsp.nspname = 'public' then c.conname else nsp.nspname || '.' || c.conname end as object_name,
+            case when nsp.nspname = 'public' then quote_ident(c.conname) else quote_ident(nsp.nspname) || '.' || quote_ident(c.conname) end as object_name,
             'constraint' as object_type
         from
             pg_catalog.pg_constraint c
