@@ -31,7 +31,7 @@ with
                 when 'm' then 'materialized view'
                 when 'p' then 'partitioned table'
                 when 'I' then 'partitioned index'
-                end as object_type
+            end as object_type
         from
             pg_catalog.pg_class pc
             inner join nsp on nsp.oid = pc.relnamespace
