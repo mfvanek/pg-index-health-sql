@@ -8,7 +8,7 @@
 -- Finds functions and procedures that don't have a description.
 -- See also https://www.postgresql.org/docs/current/sql-comment.html
 select
-    case when nsp.nspname = 'public'::text then p.proname else nsp.nspname || '.' || p.proname end as function_name,
+    case when nsp.nspname = 'public'::text then quote_ident(p.proname) else quote_ident(nsp.nspname) || '.' || quote_ident(p.proname) end as function_name,
     pg_get_function_identity_arguments(p.oid) as function_signature
 from
     pg_catalog.pg_namespace nsp

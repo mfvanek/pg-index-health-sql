@@ -5,22 +5,12 @@
  * Licensed under the Apache License 2.0
  */
 
--- Finds objects whose names have a length of max_identifier_length (usually it is 63).
--- The problem is that Postgres silently truncates such long names.
--- For example, if you have a migration where you are trying to create two objects with very long names
--- that start the same way (such as an index or constraint) and you use the "if not exists" statement,
--- you might end up with only one object in the database instead of two.
+-- Finds objects whose names do not follow naming convention (that have to be enclosed in double-quotes).
+-- You should avoid using quoted identifiers.
 --
--- If there is an object with a name of maximum length in the database, then an overflow may have occurred.
--- It is advisable to avoid such situations and use shorter names.
---
--- See https://www.postgresql.org/docs/current/runtime-config-preset.html#GUC-MAX-IDENTIFIER-LENGTH
--- See https://www.postgresql.org/docs/current/catalog-pg-class.html
+-- See https://www.postgresql.org/docs/17/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS
+-- See also https://lerner.co.il/2013/11/30/quoting-postgresql/
 with
-    t as (
-        select current_setting('max_identifier_length')::int as max_identifier_length
-    ),
-
     nsp as (
         select
             nsp.oid,
@@ -30,7 +20,7 @@ with
             nsp.nspname = :schema_name_param::text
     ),
 
-    long_names as (
+    bad_names as (
         select
             pc.oid::regclass::text as object_name,
             case pc.relkind
@@ -45,10 +35,10 @@ with
         from
             pg_catalog.pg_class pc
             inner join nsp on nsp.oid = pc.relnamespace
-            inner join t on t.max_identifier_length = length(pc.relname)
         where
-            pc.relkind in ('r', 'i', 'S', 'v', 'm', 'p', 'I')
+            pc.relkind in ('r', 'i', 'S', 'v', 'm', 'p', 'I') and
             /* decided not to filter by the pc.relispartition field here */
+            (pc.relname ~ '[A-Z]' or pc.relname ~ '[^a-z0-9_]') /* object name has characters that require quoting */
 
         union all
 
@@ -58,7 +48,8 @@ with
         from
             pg_catalog.pg_proc p
             inner join nsp on nsp.oid = p.pronamespace
-            inner join t on t.max_identifier_length = length(p.proname)
+        where
+            p.proname ~ '[A-Z]' or p.proname ~ '[^a-z0-9_]'
 
         union all
 
@@ -68,9 +59,10 @@ with
         from
             pg_catalog.pg_constraint c
             inner join nsp on nsp.oid = c.connamespace
-            inner join t on t.max_identifier_length = length(c.conname)
+        where
+            c.conname ~ '[A-Z]' or c.conname ~ '[^a-z0-9_]'
     )
 
 select *
-from long_names
+from bad_names
 order by object_type, object_name;
