@@ -10,6 +10,7 @@
 --
 -- See https://www.postgresql.org/docs/17/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS
 -- See also https://lerner.co.il/2013/11/30/quoting-postgresql/
+-- See also https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_upper_case_table_or_column_names
 with
     nsp as (
         select
