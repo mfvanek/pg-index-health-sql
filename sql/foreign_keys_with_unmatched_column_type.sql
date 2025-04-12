@@ -17,7 +17,6 @@
 with
     fk_with_attributes as (
         select
-            quote_ident(c.conname) as constraint_name,
             c.conrelid as table_oid,
             c.confrelid as foreign_table_oid,
             u.attposition,
@@ -29,7 +28,8 @@ with
             foreign_col.attname as foreign_attname,
             foreign_col.attnotnull as foreign_attnotnull,
             foreign_col.atttypid as foreign_atttypid,
-            foreign_col.atttypmod as foreign_atttypmod
+            foreign_col.atttypmod as foreign_atttypmod,
+            quote_ident(c.conname) as constraint_name
         from
             pg_catalog.pg_constraint c
             inner join pg_catalog.pg_namespace nsp on nsp.oid = c.connamespace

@@ -11,12 +11,12 @@
 with
     fk_with_attributes as (
         select
-            quote_ident(c.conname) as constraint_name,
             c.conrelid as table_oid,
             c.confrelid as foreign_table_oid,
             u.attposition,
             col.attname,
-            col.attnotnull
+            col.attnotnull,
+            quote_ident(c.conname) as constraint_name
         from
             pg_catalog.pg_constraint c
             inner join pg_catalog.pg_namespace nsp on nsp.oid = c.connamespace
