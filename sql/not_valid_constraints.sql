@@ -10,8 +10,8 @@
 -- Based on query from https://habr.com/ru/articles/800121/
 select
     c.conrelid::regclass::text as table_name,
-    c.conname as constraint_name,
-    c.contype as constraint_type
+    c.contype as constraint_type,
+    quote_ident(c.conname) as constraint_name
 from
     pg_catalog.pg_constraint c
     inner join pg_catalog.pg_namespace nsp on nsp.oid = c.connamespace

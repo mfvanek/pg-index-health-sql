@@ -9,7 +9,7 @@
 -- This will cause the child table to be scanned sequentially when deleting an entry from the referenced (parent) table.
 select
     c.conrelid::regclass::text as table_name,
-    c.conname as constraint_name,
+    quote_ident(c.conname) as constraint_name,
     array_agg(col.attname::text || ',' || col.attnotnull::text order by u.attposition) as columns
 from
     pg_catalog.pg_constraint c
