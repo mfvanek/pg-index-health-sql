@@ -10,7 +10,7 @@
 -- Based on query from https://habr.com/ru/articles/800121/
 select
     c.conrelid::regclass::text as table_name,
-    c.conname as constraint_name,
+    quote_ident(c.conname) as constraint_name,
     c.contype as constraint_type
 from
     pg_catalog.pg_constraint c

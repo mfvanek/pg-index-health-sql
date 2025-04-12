@@ -11,7 +11,7 @@
 with
     fk_with_attributes as (
         select
-            c.conname as constraint_name,
+            quote_ident(c.conname) as constraint_name,
             c.conrelid as table_oid,
             c.confrelid as foreign_table_oid,
             u.attposition,
