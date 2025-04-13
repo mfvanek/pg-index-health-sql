@@ -13,8 +13,8 @@
 select
     i.indrelid::regclass::text as table_name,
     i.indexrelid::regclass::text as index_name,
-    col.attname::text as column_name,
     col.attnotnull as column_not_null,
+    quote_ident(col.attname::text) as column_name,
     pg_relation_size(i.indexrelid) as index_size
 from pg_catalog.pg_index i
     inner join pg_catalog.pg_class ic on ic.oid = i.indexrelid
