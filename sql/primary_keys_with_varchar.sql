@@ -18,9 +18,9 @@ select
     array_agg(quote_ident(a.attname) || ',' || a.attnotnull::text order by a.attnum) as columns
 from
     pg_catalog.pg_class pc
-    join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
-    join pg_catalog.pg_index i on i.indrelid = pc.oid
-    join pg_catalog.pg_attribute a on a.attrelid = pc.oid and a.attnum = any(i.indkey)
+    inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
+    inner join pg_catalog.pg_index i on i.indrelid = pc.oid
+    inner join pg_catalog.pg_attribute a on a.attrelid = pc.oid and a.attnum = any(i.indkey)
 where
     not a.attisdropped and
     a.attnum > 0 and
