@@ -50,6 +50,7 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 26. Tables with zero or one column ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_with_zero_or_one_column.sql)).
 27. Objects whose names do not follow naming convention ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/objects_not_following_naming_convention.sql)).
 28. Columns whose names do not follow naming convention ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_not_following_naming_convention.sql)).
+29. Primary keys with varchar columns instead of uuids ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/primary_keys_with_varchar.sql)).
 
 ## Local development
 
