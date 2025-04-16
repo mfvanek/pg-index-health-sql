@@ -15,7 +15,7 @@ with
             col.attrelid::regclass::text as table_name,
             col.attnotnull as column_not_null,
             nsp.nspname as schema_name,
-            quote_ident(col.attname::text) as column_name,
+            quote_ident(col.attname) as column_name,
             case col.atttypid
                 when 'int'::regtype then 'serial'
                 when 'int8'::regtype then 'bigserial'
