@@ -14,7 +14,7 @@
 select
     pc.oid::regclass::text as table_name,
     pg_table_size(pc.oid) as table_size,
-    coalesce(array_agg(a.attname::text || ',' || a.attnotnull::text order by a.attnum) filter (where a.attname is not null), '{}') as columns
+    coalesce(array_agg(quote_ident(a.attname) || ',' || a.attnotnull::text order by a.attnum) filter (where a.attname is not null), '{}') as columns
 from
     pg_catalog.pg_class pc
     inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace

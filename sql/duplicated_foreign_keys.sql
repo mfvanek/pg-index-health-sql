@@ -14,8 +14,8 @@ with
             c.conrelid as table_oid,
             c.confrelid as foreign_table_oid,
             u.attposition,
-            col.attname,
             col.attnotnull,
+            quote_ident(col.attname) as column_name,
             quote_ident(c.conname) as constraint_name
         from
             pg_catalog.pg_constraint c
@@ -33,7 +33,7 @@ with
             constraint_name,
             table_oid,
             foreign_table_oid,
-            array_agg(attname::text || ',' || attnotnull::text order by attposition) as columns
+            array_agg(column_name || ',' || attnotnull::text order by attposition) as columns
         from fk_with_attributes
         group by constraint_name, table_oid, foreign_table_oid
     )

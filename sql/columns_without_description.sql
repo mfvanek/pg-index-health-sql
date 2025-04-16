@@ -10,7 +10,7 @@
 select
     pc.oid::regclass::text as table_name,
     col.attnotnull as column_not_null,
-    quote_ident(col.attname::text) as column_name
+    quote_ident(col.attname) as column_name
 from
     pg_catalog.pg_class pc
     inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
