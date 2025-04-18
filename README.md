@@ -51,6 +51,7 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 27. Objects whose names do not follow naming convention ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/objects_not_following_naming_convention.sql)).
 28. Columns whose names do not follow naming convention ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_not_following_naming_convention.sql)).
 29. Primary keys with varchar columns instead of uuids ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/primary_keys_with_varchar.sql)).
+30. Columns with [varchar(n)](https://www.postgresql.org/docs/current/datatype-character.html) type ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_fixed_length_varchar.sql)).
 
 ## Local development
 
