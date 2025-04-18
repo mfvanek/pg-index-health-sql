@@ -14,8 +14,8 @@ select
     quote_ident(col.attname) as column_name
 from
     pg_catalog.pg_class t
-    inner join pg_catalog.pg_namespace nsp on t.relnamespace = nsp.oid
-    inner join pg_catalog.pg_attribute col on t.oid = col.attrelid
+    inner join pg_catalog.pg_namespace nsp on nsp.oid = t.relnamespace
+    inner join pg_catalog.pg_attribute col on col.attrelid = t.oid
 where
     t.relkind in ('r', 'p') and
     not t.relispartition and
