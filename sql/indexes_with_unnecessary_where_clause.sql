@@ -18,6 +18,7 @@ from
     inner join unnest(pi.indkey) with ordinality as u(attnum, ordinality) on true
     inner join pg_attribute a on a.attrelid = pc.oid and a.attnum = u.attnum
 where
+    pc.relkind in ('r', 'p') and /* regular and partitioned tables */
     not pc.relispartition and
     pi.indpred is not null and
     exists (
@@ -25,9 +26,9 @@ where
         from
             unnest(pi.indkey) as k(attnum)
             inner join pg_attribute att on att.attrelid = pc.oid and att.attnum = k.attnum
-            where
-                att.attnotnull = true and
-                pg_get_indexdef(pi.indexrelid) ilike '%where%' || quote_ident(att.attname) || ' is not null%'
+        where
+            att.attnotnull = true and
+            pg_get_indexdef(pi.indexrelid) ilike '%where%' || quote_ident(att.attname) || ' is not null%'
     ) and
     nsp.nspname = :schema_name_param::text
 group by pc.oid, pi.indexrelid
