@@ -24,7 +24,7 @@ where
     exists (
         select 1
         from
-            unnest(pi.indkey) as k(attnum)
+            unnest(pi.indkey) k(attnum)
             inner join pg_catalog.pg_attribute att on att.attrelid = pc.oid and att.attnum = k.attnum
         where
             att.attnotnull = true and
