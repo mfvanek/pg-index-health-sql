@@ -6,6 +6,7 @@
  */
 
 -- Finds indexes that have a redundant predicate with the where-clause 'column is not null' for the not null column.
+-- AL01
 select
     pc.oid::regclass::text as table_name,
     pi.indexrelid::regclass::text as index_name,
@@ -15,7 +16,7 @@ from
     pg_catalog.pg_index pi
     inner join pg_catalog.pg_class pc on pc.oid = pi.indrelid
     inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
-    inner join unnest(pi.indkey) with ordinality as u(attnum, ordinality) on true
+    inner join unnest(pi.indkey) with ordinality u(attnum, ordinality) on true
     inner join pg_catalog.pg_attribute a on a.attrelid = pc.oid and a.attnum = u.attnum
 where
     pc.relkind in ('r', 'p') and /* regular and partitioned tables */
