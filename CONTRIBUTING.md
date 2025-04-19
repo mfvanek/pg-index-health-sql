@@ -18,7 +18,11 @@ Each database structure check starts with an SQL query to the pg_catalog.
        psui.indexrelid::regclass::text as index_name
    ```
 4. All names should be enclosed in double quotes, if required.
-5. The columns for the index or foreign key must be returned in the order they are used in the index or foreign key.
+5. The columns for the index or foreign key must be returned in the order they are used in the index or foreign key:
+   ```sql
+   select
+       array_agg(quote_ident(a.attname) || ',' || a.attnotnull::text order by u.ordinality) as columns
+   ```
 6. All query results must be ordered in some way.
 7. All queries must have a brief description.
    Links to documentation or articles with detailed descriptions are welcome.

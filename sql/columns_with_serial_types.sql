@@ -30,10 +30,10 @@ with
             pg_catalog.pg_class t
             inner join pg_catalog.pg_namespace nsp on nsp.oid = t.relnamespace
             inner join pg_catalog.pg_attribute col on col.attrelid = t.oid
-            inner join pg_attrdef ad on ad.adrelid = col.attrelid and ad.adnum = col.attnum
+            inner join pg_catalog.pg_attrdef ad on ad.adrelid = col.attrelid and ad.adnum = col.attnum
             left join lateral (
                 select sum(case when c.contype = 'p' then +1 else -1 end) as res
-                from pg_constraint c
+                from pg_catalog.pg_constraint c
                 where
                     c.conrelid = col.attrelid and
                     c.conkey[1] = col.attnum and

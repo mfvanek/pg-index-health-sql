@@ -12,11 +12,11 @@ select
     pg_relation_size(pi.indexrelid) as index_size,
     array_agg(quote_ident(a.attname) || ',' || a.attnotnull::text order by u.ordinality) as columns
 from
-    pg_index pi
-    inner join pg_class pc on pc.oid = pi.indrelid
-    inner join pg_namespace nsp on nsp.oid = pc.relnamespace
+    pg_catalog.pg_index pi
+    inner join pg_catalog.pg_class pc on pc.oid = pi.indrelid
+    inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
     inner join unnest(pi.indkey) with ordinality as u(attnum, ordinality) on true
-    inner join pg_attribute a on a.attrelid = pc.oid and a.attnum = u.attnum
+    inner join pg_catalog.pg_attribute a on a.attrelid = pc.oid and a.attnum = u.attnum
 where
     pc.relkind in ('r', 'p') and /* regular and partitioned tables */
     not pc.relispartition and
@@ -25,7 +25,7 @@ where
         select 1
         from
             unnest(pi.indkey) as k(attnum)
-            inner join pg_attribute att on att.attrelid = pc.oid and att.attnum = k.attnum
+            inner join pg_catalog.pg_attribute att on att.attrelid = pc.oid and att.attnum = k.attnum
         where
             att.attnotnull = true and
             pg_get_indexdef(pi.indexrelid) ilike '%where%' || quote_ident(att.attname) || ' is not null%'
