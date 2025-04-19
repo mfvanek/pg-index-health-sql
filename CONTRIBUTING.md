@@ -15,11 +15,12 @@ Each database structure check starts with an SQL query to the pg_catalog.
    ```sql
    select
        psui.relid::regclass::text as table_name,
-       psui.indexrelid::regclass::text as index_name,
+       psui.indexrelid::regclass::text as index_name
    ```
 4. All names should be enclosed in double quotes, if required.
-5. All query results must be ordered in some way.
-6. All queries must have a brief description.
+5. The columns for the index or foreign key must be returned in the order they are used in the index or foreign key.
+6. All query results must be ordered in some way.
+7. All queries must have a brief description.
    Links to documentation or articles with detailed descriptions are welcome.
-7. Name of the sql-file with query must correspond to diagnostic name in [Java project](https://github.com/mfvanek/pg-index-health).
-8. Do not forget to update `README.md`.
+8. Name of the sql-file with query must correspond to diagnostic name in [Java project](https://github.com/mfvanek/pg-index-health).
+9. Do not forget to update `README.md`.
