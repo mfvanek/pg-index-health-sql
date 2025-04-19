@@ -8,12 +8,13 @@
 -- Finds invalid indexes that might have appeared as a result of
 -- unsuccessful execution of the 'create index concurrently' command.
 select
-    x.indrelid::regclass::text as table_name,
-    x.indexrelid::regclass::text as index_name
+    pi.indrelid::regclass::text as table_name,
+    pi.indexrelid::regclass::text as index_name,
+    pg_relation_size(pi.indexrelid) as index_size
 from
-    pg_catalog.pg_index x
-    inner join pg_catalog.pg_stat_all_indexes psai on psai.indexrelid = x.indexrelid
+    pg_catalog.pg_index pi
+    inner join pg_catalog.pg_stat_all_indexes psai on psai.indexrelid = pi.indexrelid
 where
     psai.schemaname = :schema_name_param::text and
-    x.indisvalid = false
+    pi.indisvalid = false
 order by table_name, index_name;

@@ -11,17 +11,17 @@ select
     string_agg('idx=' || idx::text || ', size=' || pg_relation_size(idx), '; ') as duplicated_indexes
 from (
     select
-        x.indexrelid::regclass as idx,
-        x.indrelid::regclass::text as table_name, /* cast to text for sorting purposes */
+        pi.indexrelid::regclass as idx,
+        pi.indrelid::regclass::text as table_name, /* cast to text for sorting purposes */
         (
-            x.indrelid::text || ' ' || x.indclass::text || ' ' || x.indkey::text || ' ' ||
-            x.indcollation::text || ' ' ||
-            coalesce(pg_get_expr(x.indexprs, x.indrelid), '') || ' ' ||
-            coalesce(pg_get_expr(x.indpred, x.indrelid), '')
+            pi.indrelid::text || ' ' || pi.indclass::text || ' ' || pi.indkey::text || ' ' ||
+            pi.indcollation::text || ' ' ||
+            coalesce(pg_get_expr(pi.indexprs, pi.indrelid), '') || ' ' ||
+            coalesce(pg_get_expr(pi.indpred, pi.indrelid), '')
         ) as grouping_key
     from
-        pg_catalog.pg_index x
-        inner join pg_catalog.pg_class pc on pc.oid = x.indexrelid
+        pg_catalog.pg_index pi
+        inner join pg_catalog.pg_class pc on pc.oid = pi.indexrelid
         inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
     where
         nsp.nspname = :schema_name_param::text and
