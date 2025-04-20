@@ -6,7 +6,6 @@
  */
 
 -- Finds indexes that have a redundant predicate with the where-clause 'column is not null' for the not null column.
--- AL01
 select
     pc.oid::regclass::text as table_name,
     pi.indexrelid::regclass::text as index_name,
