@@ -69,7 +69,7 @@ docker run \
   -e USE_FIND_ALGORITHM=true \
   -e VALIDATE_SQLFLUFF=true \
   -v $(pwd):/tmp/lint \
-  ghcr.io/super-linter/super-linter:slim-v7.3.0
+  ghcr.io/super-linter/super-linter:slim-v7.4.0
 ```
 
 #### Windows
@@ -82,13 +82,15 @@ docker run ^
   -e USE_FIND_ALGORITHM=true ^
   -e VALIDATE_SQLFLUFF=true ^
   -v "%cd%":/tmp/lint ^
-  ghcr.io/super-linter/super-linter:slim-v7.3.0
+  ghcr.io/super-linter/super-linter:slim-v7.4.0
 ```
+
+See https://github.com/super-linter/super-linter/blob/main/dependencies/python/sqlfluff.txt
 
 ```shell
 docker run --rm ^
   -v "%cd%\.github\linters\.sqlfluff":/sql/.sqlfluff:ro ^
   -v "%cd%":/sql ^
   -e SQLFLUFF_CONFIG=/sql/.sqlfluff ^
-  sqlfluff/sqlfluff:3.3.1 lint /sql
+  sqlfluff/sqlfluff:3.4.0 lint /sql
 ```
