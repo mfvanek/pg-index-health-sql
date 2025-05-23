@@ -36,13 +36,13 @@ where
     t.relkind = 'r' /* only regular tables */
 group by t.oid, c.conindid
 having bool_or(
-    col.atttypid not in (
-        'smallint'::regtype,
-        'integer'::regtype,
-        'bigint'::regtype,
-        'uuid'::regtype
+        col.atttypid not in (
+            'smallint'::regtype,
+            'integer'::regtype,
+            'bigint'::regtype,
+            'uuid'::regtype
+        )
     )
-)
 
 union all
 
@@ -64,17 +64,17 @@ where
     not t.relispartition
 group by t.oid, c.conindid
 having bool_or(
-    /* for partitioned tables decided to allow a few more data types that usually are used in ranges */
-    col.atttypid not in (
-        'smallint'::regtype,
-        'integer'::regtype,
-        'bigint'::regtype,
-        'uuid'::regtype,
-        'date'::regtype,
-        'timestamp'::regtype,
-        'timestamptz'::regtype,
-        'time'::regtype,
-        'timetz'::regtype
+        /* for partitioned tables decided to allow a few more data types that usually are used in ranges */
+        col.atttypid not in (
+            'smallint'::regtype,
+            'integer'::regtype,
+            'bigint'::regtype,
+            'uuid'::regtype,
+            'date'::regtype,
+            'timestamp'::regtype,
+            'timestamptz'::regtype,
+            'time'::regtype,
+            'timetz'::regtype
+        )
     )
-)
 order by table_name, index_name;
