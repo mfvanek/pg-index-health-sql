@@ -53,6 +53,7 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 29. Primary keys with varchar columns instead of uuids ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/primary_keys_with_varchar.sql)).
 30. Columns with [varchar(n)](https://www.postgresql.org/docs/current/datatype-character.html) type ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_fixed_length_varchar.sql)).
 31. Indexes with unnecessary where-clause on not null column ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/indexes_with_unnecessary_where_clause.sql)).
+32. Primary keys that are most likely natural keys ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/primary_keys_that_most_likely_natural_keys.sql)).
 
 ## Local development
 
@@ -68,7 +69,7 @@ docker run \
   -e USE_FIND_ALGORITHM=true \
   -e VALIDATE_SQLFLUFF=true \
   -v $(pwd):/tmp/lint \
-  ghcr.io/super-linter/super-linter:slim-v7.3.0
+  ghcr.io/super-linter/super-linter:slim-v7.4.0
 ```
 
 #### Windows
@@ -81,13 +82,15 @@ docker run ^
   -e USE_FIND_ALGORITHM=true ^
   -e VALIDATE_SQLFLUFF=true ^
   -v "%cd%":/tmp/lint ^
-  ghcr.io/super-linter/super-linter:slim-v7.3.0
+  ghcr.io/super-linter/super-linter:slim-v7.4.0
 ```
+
+See https://github.com/super-linter/super-linter/blob/main/dependencies/python/sqlfluff.txt
 
 ```shell
 docker run --rm ^
   -v "%cd%\.github\linters\.sqlfluff":/sql/.sqlfluff:ro ^
   -v "%cd%":/sql ^
   -e SQLFLUFF_CONFIG=/sql/.sqlfluff ^
-  sqlfluff/sqlfluff:3.3.1 lint /sql
+  sqlfluff/sqlfluff:3.4.0 lint /sql
 ```
