@@ -19,8 +19,8 @@ select
     array_agg(quote_ident(a.attname) || ',' || a.attnotnull::text order by u.ordinality) as columns
 from
     pg_catalog.pg_class pc
-    inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
-    inner join pg_catalog.pg_index pi on pi.indrelid = pc.oid
+    inner join pg_catalog.pg_namespace     nsp on nsp.oid = pc.relnamespace
+    inner join pg_catalog.pg_index   pi on pi.indrelid = pc.oid
     inner join unnest(pi.indkey) with ordinality u(attnum, ordinality) on true
     inner join pg_catalog.pg_attribute a on a.attrelid = pc.oid and a.attnum = u.attnum
 where
