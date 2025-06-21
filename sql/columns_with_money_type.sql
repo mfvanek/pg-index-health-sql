@@ -9,7 +9,7 @@
 -- Use `numeric` type instead (possibly with the currency being used in an adjacent column).
 --
 -- Money type doesn't handle fractions of a cent (or equivalents in other currencies),
--- it's rounding behaviour is probably not what you want.
+-- it's rounding behavior is probably not what you want.
 -- It doesn't store a currency with the value, rather assuming
 -- that all money columns contain the currency specified by the database's lc_monetary locale setting.
 -- If you change the lc_monetary setting for any reason, all money columns will contain the wrong value.
