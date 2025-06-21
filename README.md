@@ -1,9 +1,15 @@
 # pg-index-health-sql
 
-**pg-index-health-sql** is a set of sql-queries for analyzing and maintaining indexes and tables health in Postgresql databases.
+**pg-index-health-sql** is a collection of SQL queries for analyzing PostgreSQL schemas, detecting issues and promoting best practices.
 
 [![Lint Code Base](https://github.com/mfvanek/pg-index-health-sql/actions/workflows/linter.yml/badge.svg)](https://github.com/mfvanek/pg-index-health-sql/actions/workflows/linter.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/mfvanek/pg-index-health-sql/blob/master/LICENSE "Apache License 2.0")
+
+## What is this?
+
+**pg-index-health-sql** provides a curated set of raw SQL queries designed to identify common schema issues in PostgreSQL databases — such as redundant indexes, missing primary keys or inefficient table structures.
+
+It enables lightweight, database-native analysis without requiring external libraries or frameworks, making it suitable for direct use in psql sessions, scripts, or monitoring dashboards.
 
 ## Supported PostgreSQL versions
 
