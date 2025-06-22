@@ -8,11 +8,11 @@
 -- Finds indexes in which columns with the timestamp[tz] type are not the last.
 --
 -- It always looks suspicious if in your index a field with obviously greater variation of the timestamp[tz] type is not the last.
--- You would better to use ESR rule: Equality → Sort → Range
+-- You would better to use ESR rule (Equality/Sort/Range).
 -- When creating a composite B-tree index:
---     E — Equality: first, the columns for which the query uses =
---     S — Sort: then the ones that are sorted (ORDER BY)
---     R — Range: and only at the end are columns with ranges (>, <, BETWEEN)
+--   * E — Equality: first, the columns for which the query uses =
+--   * S — Sort: then the ones that are sorted (ORDER BY)
+--   * R — Range: and only at the end are columns with ranges (>, <, BETWEEN)
 -- See https://habr.com/ru/articles/911688/
 -- See also https://www.postgresql.org/docs/current/indexes-multicolumn.html
 --
@@ -36,8 +36,8 @@ with
             inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
             left join lateral unnest(pi.indkey) with ordinality as u(attnum, attposition) on true
             left join pg_catalog.pg_attribute a on a.attrelid = pi.indrelid and a.attnum = u.attnum
-            left join lateral unnest(pi.indclass) with ordinality as opclass(opcoid, op_attposition) on attposition = op_attposition
-            left join pg_catalog.pg_opclass op on op.oid = opclass.opcoid
+            left join lateral unnest(pi.indclass) with ordinality as uop(opcoid, attposition) on u.attposition = uop.attposition
+            left join pg_catalog.pg_opclass op on op.oid = uop.opcoid
         where
             nsp.nspname = :schema_name_param::text and
             not pi.indisunique and
@@ -50,7 +50,7 @@ with
 select
     opc.table_oid::regclass::text as table_name,
     opc.index_oid::regclass::text as index_name,
-    opc.columns as columns,
+    opc.columns,
     pg_relation_size(opc.index_oid) as index_size
 from
     columns_with_opclass opc
