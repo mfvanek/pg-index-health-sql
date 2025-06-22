@@ -32,11 +32,11 @@ with
             array_agg(replace(op.opcname::text, '_ops', '') order by u.attposition) as opclasses
         from
             pg_catalog.pg_index pi
-            inner join pg_catalog.pg_class pc on pc.oid = pi.indexrelid
+            inner join pg_catalog.pg_class pc on pc.oid = pi.indrelid
             inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
-            left join lateral unnest(pi.indkey) with ordinality as u(attnum, attposition) on true
+            left join lateral unnest(pi.indkey) with ordinality u(attnum, attposition) on true
             left join pg_catalog.pg_attribute a on a.attrelid = pi.indrelid and a.attnum = u.attnum
-            left join lateral unnest(pi.indclass) with ordinality as uop(opcoid, attposition) on u.attposition = uop.attposition
+            left join lateral unnest(pi.indclass) with ordinality uop(opcoid, attposition) on uop.attposition = u.attposition
             left join pg_catalog.pg_opclass op on op.oid = uop.opcoid
         where
             nsp.nspname = :schema_name_param::text and
@@ -57,7 +57,7 @@ from
 where
     array_length(opc.opclasses,1) > 1 and
     (
-        'timestamp' = any(opc.opclasses[1:array_upper(opc.opclasses,1)-1]) or
-        'timestamptz' = any(opc.opclasses[1:array_upper(opc.opclasses,1)-1])
+        'timestamp' = any(opc.opclasses[1:array_upper(opc.opclasses,1) - 1]) or
+        'timestamptz' = any(opc.opclasses[1:array_upper(opc.opclasses,1) - 1])
     )
 order by table_name, index_name;

@@ -16,7 +16,8 @@ select
     col.attnotnull as column_not_null,
     quote_ident(col.attname) as column_name,
     pg_relation_size(pi.indexrelid) as index_size
-from pg_catalog.pg_index pi
+from
+    pg_catalog.pg_index pi
     inner join pg_catalog.pg_class ic on ic.oid = pi.indexrelid
     inner join pg_catalog.pg_namespace nsp on nsp.oid = ic.relnamespace
     inner join pg_catalog.pg_am am on am.oid = ic.relam and am.amname = 'btree'
