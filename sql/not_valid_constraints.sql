@@ -7,7 +7,7 @@
 
 -- Finds not validated constraints
 --
--- Based on query from https://habr.com/ru/articles/800121/
+-- Based on a query from https://habr.com/ru/articles/800121/
 select
     c.conrelid::regclass::text as table_name,
     c.contype as constraint_type,

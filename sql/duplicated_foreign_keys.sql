@@ -7,7 +7,7 @@
 
 -- Finds completely identical foreign keys
 --
--- Based on query from https://habr.com/ru/articles/803841/
+-- Based on a query from https://habr.com/ru/articles/803841/
 with
     fk_with_attributes as (
         select

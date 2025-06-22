@@ -8,7 +8,7 @@
 -- Finds B-tree indexes on array columns
 --
 -- GIN-index should be used instead for such columns
--- Based on query from https://habr.com/ru/articles/800121/
+-- Based on a query from https://habr.com/ru/articles/800121/
 -- See also https://www.postgresql.org/docs/current/catalog-pg-type.html#CATALOG-TYPCATEGORY-TABLE
 select
     pi.indrelid::regclass::text as table_name,
@@ -16,7 +16,8 @@ select
     col.attnotnull as column_not_null,
     quote_ident(col.attname) as column_name,
     pg_relation_size(pi.indexrelid) as index_size
-from pg_catalog.pg_index pi
+from
+    pg_catalog.pg_index pi
     inner join pg_catalog.pg_class ic on ic.oid = pi.indexrelid
     inner join pg_catalog.pg_namespace nsp on nsp.oid = ic.relnamespace
     inner join pg_catalog.pg_am am on am.oid = ic.relam and am.amname = 'btree'
