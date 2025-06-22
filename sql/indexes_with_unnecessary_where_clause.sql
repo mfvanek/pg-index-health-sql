@@ -10,12 +10,12 @@ select
     pc.oid::regclass::text as table_name,
     pi.indexrelid::regclass::text as index_name,
     pg_relation_size(pi.indexrelid) as index_size,
-    array_agg(quote_ident(a.attname) || ',' || a.attnotnull::text order by u.ordinality) as columns
+    array_agg(quote_ident(a.attname) || ',' || a.attnotnull::text order by u.attposition) as columns
 from
     pg_catalog.pg_index pi
     inner join pg_catalog.pg_class pc on pc.oid = pi.indrelid
     inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
-    inner join unnest(pi.indkey) with ordinality u(attnum, ordinality) on true
+    inner join unnest(pi.indkey) with ordinality u(attnum, attposition) on true
     inner join pg_catalog.pg_attribute a on a.attrelid = pc.oid and a.attnum = u.attnum
 where
     pc.relkind in ('r', 'p') and /* regular and partitioned tables */

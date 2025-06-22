@@ -10,7 +10,7 @@
 -- These are often service tables that are not part of the project, or
 -- tables that are no longer in use or were created by mistake, but were not deleted in a timely manner.
 --
--- Based on query from https://habr.com/ru/articles/803841/
+-- Based on a query from https://habr.com/ru/articles/803841/
 with
     nsp as (
         select

@@ -13,7 +13,7 @@
 -- and reduces the number of errors that may appear due to type inconsistencies in the future.
 --
 -- See https://www.postgresql.org/docs/current/catalog-pg-constraint.html
--- Based on query from https://habr.com/ru/articles/803841/
+-- Based on a query from https://habr.com/ru/articles/803841/
 with
     fk_with_attributes as (
         select

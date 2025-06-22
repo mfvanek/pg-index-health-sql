@@ -7,7 +7,7 @@
 
 -- Finds sequences that may overflow in the near future
 --
--- Based on query from https://habr.com/ru/articles/800121/
+-- Based on a query from https://habr.com/ru/articles/800121/
 with
     all_sequences as (
         select

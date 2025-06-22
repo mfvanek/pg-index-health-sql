@@ -8,7 +8,7 @@
 -- Finds B-tree indexes on array columns
 --
 -- GIN-index should be used instead for such columns
--- Based on query from https://habr.com/ru/articles/800121/
+-- Based on a query from https://habr.com/ru/articles/800121/
 -- See also https://www.postgresql.org/docs/current/catalog-pg-type.html#CATALOG-TYPCATEGORY-TABLE
 select
     pi.indrelid::regclass::text as table_name,
