@@ -11,6 +11,7 @@
 select
     t.oid::regclass::text as table_name,
     col.attnotnull as column_not_null,
+    col.atttypid::regtype::text as column_type,
     quote_ident(col.attname) as column_name
 from
     pg_catalog.pg_class t

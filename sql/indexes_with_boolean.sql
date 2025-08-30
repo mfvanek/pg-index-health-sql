@@ -5,11 +5,12 @@
  * Licensed under the Apache License 2.0
  */
 
--- Finds indexes that contains boolean values.
+-- Finds indexes that contain boolean values.
 select
     pi.indrelid::regclass::text as table_name,
     pi.indexrelid::regclass::text as index_name,
     col.attnotnull as column_not_null,
+    col.atttypid::regtype::text as column_type,
     quote_ident(col.attname) as column_name,
     pg_relation_size(pi.indexrelid) as index_size
 from

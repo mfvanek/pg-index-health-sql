@@ -35,7 +35,7 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 5. Foreign keys without associated indexes ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/foreign_keys_without_index.sql)).
 6. Indexes with null values ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/indexes_with_null_values.sql)).
 7. Tables with missing indexes ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_with_missing_indexes.sql)).
-8. Tables without primary key ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_without_primary_key.sql)).
+8. Tables without a primary key ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_without_primary_key.sql)).
 9. Indexes [bloat](https://www.percona.com/blog/2018/08/06/basic-understanding-bloat-vacuum-postgresql-mvcc/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/bloated_indexes.sql)).
 10. Tables [bloat](https://www.percona.com/blog/2018/08/06/basic-understanding-bloat-vacuum-postgresql-mvcc/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/bloated_tables.sql)).
 11. Tables without [description](https://www.postgresql.org/docs/current/sql-comment.html) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_without_description.sql)).
@@ -51,17 +51,18 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 21. Duplicated (completely identical) foreign keys ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/duplicated_foreign_keys.sql)).
 22. Intersected (partially identical) foreign keys ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/intersected_foreign_keys.sql)).
 23. Objects with possible name overflow ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/possible_object_name_overflow.sql)).
-24. Tables not linked to other tables ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_not_linked_to_others.sql)).
+24. Tables are not linked to other tables ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_not_linked_to_others.sql)).
 25. Foreign keys [with unmatched column type](https://habr.com/ru/articles/803841/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/foreign_keys_with_unmatched_column_type.sql)).
-26. Tables with zero or one column ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_with_zero_or_one_column.sql)).
-27. Objects whose names do not follow naming convention ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/objects_not_following_naming_convention.sql)).
-28. Columns whose names do not follow naming convention ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_not_following_naming_convention.sql)).
+26. Tables with zero or one columns ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_with_zero_or_one_column.sql)).
+27. Objects whose names do not follow the naming convention ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/objects_not_following_naming_convention.sql)).
+28. Columns whose names do not follow the naming convention ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_not_following_naming_convention.sql)).
 29. Primary keys with varchar columns instead of uuids ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/primary_keys_with_varchar.sql)).
 30. Columns with [varchar(n)](https://www.postgresql.org/docs/current/datatype-character.html) type ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_fixed_length_varchar.sql)).
 31. Indexes with unnecessary where-clause on not null column ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/indexes_with_unnecessary_where_clause.sql)).
 32. Primary keys that are most likely natural keys ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/primary_keys_that_most_likely_natural_keys.sql)).
 33. Columns with [money](https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_money) type ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_money_type.sql)).
 34. Indexes with a [timestamp in the middle](https://habr.com/ru/companies/tensor/articles/488104/) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/indexes_with_timestamp_in_the_middle.sql)).
+35. Columns with a [timestamp](https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_timestamp_.28without_time_zone.29) type ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_timestamp_or_timetz_type.sql)).
 
 ## Local development
 
@@ -77,7 +78,7 @@ docker run \
   -e USE_FIND_ALGORITHM=true \
   -e VALIDATE_SQLFLUFF=true \
   -v $(pwd):/tmp/lint \
-  ghcr.io/super-linter/super-linter:slim-v7.4.0
+  ghcr.io/super-linter/super-linter:slim-v8.1.0
 ```
 
 #### Windows
@@ -90,7 +91,7 @@ docker run ^
   -e USE_FIND_ALGORITHM=true ^
   -e VALIDATE_SQLFLUFF=true ^
   -v "%cd%":/tmp/lint ^
-  ghcr.io/super-linter/super-linter:slim-v7.4.0
+  ghcr.io/super-linter/super-linter:slim-v8.1.0
 ```
 
 See https://github.com/super-linter/super-linter/blob/main/dependencies/python/sqlfluff.txt
@@ -100,5 +101,5 @@ docker run --rm ^
   -v "%cd%\.github\linters\.sqlfluff":/sql/.sqlfluff:ro ^
   -v "%cd%":/sql ^
   -e SQLFLUFF_CONFIG=/sql/.sqlfluff ^
-  sqlfluff/sqlfluff:3.4.0 lint /sql
+  sqlfluff/sqlfluff:3.4.2 lint /sql
 ```
