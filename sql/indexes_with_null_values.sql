@@ -21,7 +21,7 @@ where
     not a.attnotnull and
     not ic.relispartition and
     nsp.nspname = :schema_name_param::text and
-    array_position(pi.indkey, a.attnum) = 0 and /* only for first segment */
+    array_position(pi.indkey, a.attnum) = 0 and /* only for the first segment */
     (pi.indpred is null or (position(lower(a.attname) in lower(pg_get_expr(pi.indpred, pi.indrelid))) = 0))
 group by pi.indrelid, pi.indexrelid, pi.indpred
 order by table_name, index_name;

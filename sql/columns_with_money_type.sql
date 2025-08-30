@@ -5,11 +5,11 @@
  * Licensed under the Apache License 2.0
  */
 
--- Finds columns of type 'money'.
--- Use `numeric` type instead (possibly with the currency being used in an adjacent column).
+-- Finds columns of the type 'money'.
+-- Use the `numeric` type instead (possibly with the currency being used in an adjacent column).
 --
--- Money type doesn't handle fractions of a cent (or equivalents in other currencies),
--- it's rounding behavior is probably not what you want.
+-- Money type doesn't handle fractions of a cent (or equivalents in other currencies).
+-- Its rounding behavior is probably not what you want.
 -- It doesn't store a currency with the value, rather assuming
 -- that all money columns contain the currency specified by the database's lc_monetary locale setting.
 -- If you change the lc_monetary setting for any reason, all money columns will contain the wrong value.
@@ -18,6 +18,7 @@
 select
     t.oid::regclass::text as table_name,
     col.attnotnull as column_not_null,
+    col.atttypid::regtype::text as column_type,
     quote_ident(col.attname) as column_name
 from
     pg_catalog.pg_class t

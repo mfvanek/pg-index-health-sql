@@ -5,10 +5,12 @@
  * Licensed under the Apache License 2.0
  */
 
--- Finds columns of type 'json'. Use 'jsonb' instead.
+-- Finds columns of type 'timestamp (without time zone)' or 'timetz' in the specified schema.
+-- Don't use the timestamp type to store timestamps, use timestamptz (also known as timestamp with time zone) instead.
+-- Don't use the timetz type. You probably want timestamptz instead.
 --
--- See also https://www.postgresql.org/docs/current/datatype-json.html
--- and https://medium.com/geekculture/postgres-jsonb-usage-and-performance-analysis-cdbd1242a018
+-- See https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_timestamp_.28without_time_zone.29
+-- See https://wiki.postgresql.org/wiki/Don't_Do_This#Don't_use_timetz
 select
     t.oid::regclass::text as table_name,
     col.attnotnull as column_not_null,
@@ -21,8 +23,8 @@ from
 where
     t.relkind in ('r', 'p') and
     not t.relispartition and
-    col.attnum > 0 and /* to filter out system columns such as oid, ctid, xmin, xmax, etc. */
+    col.attnum > 0 and /* to filter out system columns */
     not col.attisdropped and
-    col.atttypid = 'json'::regtype and
+    col.atttypid in ('timestamp without time zone'::regtype, 'timetz'::regtype) and
     nsp.nspname = :schema_name_param::text
 order by table_name, column_name;
