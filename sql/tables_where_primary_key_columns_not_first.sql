@@ -15,8 +15,9 @@
 with
     target_tables as (
         select pc.oid
-        from pg_catalog.pg_class pc
-        inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
+        from
+            pg_catalog.pg_class pc
+            inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
         where
             nsp.nspname = :schema_name_param::text and
             pc.relkind in ('r', 'p') and
@@ -27,8 +28,9 @@ with
         select
             t.oid as table_oid,
             a.attname as first_column
-        from target_tables t
-        inner join pg_catalog.pg_attribute a on a.attrelid = t.oid and a.attnum > 0 and not a.attisdropped
+        from
+            target_tables t
+            inner join pg_catalog.pg_attribute a on a.attrelid = t.oid and a.attnum > 0 and not a.attisdropped
         where
             a.attnum = (
                 select min(att.attnum)
@@ -44,9 +46,10 @@ with
         select
             c.conrelid as table_oid,
             pg_catalog.array_agg(a.attname order by a.attnum) as pk_columns
-        from pg_catalog.pg_constraint c
-        inner join target_tables t on t.oid = c.conrelid
-        inner join pg_catalog.pg_attribute a on a.attrelid = t.oid and a.attnum = any(c.conkey)
+        from
+            pg_catalog.pg_constraint c
+            inner join target_tables t on t.oid = c.conrelid
+            inner join pg_catalog.pg_attribute a on a.attrelid = t.oid and a.attnum = any(c.conkey)
         where
             c.contype = 'p'
         group by c.conrelid
@@ -55,8 +58,9 @@ with
 select
     f.table_oid::regclass::text as table_name,
     pg_table_size(f.table_oid) as table_size
-from first_columns f
-inner join pk_columns p on p.table_oid = f.table_oid
+from
+    first_columns f
+    inner join pk_columns p on p.table_oid = f.table_oid
 where
     f.first_column <> p.pk_columns[1]
 order by table_name;

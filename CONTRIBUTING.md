@@ -4,8 +4,8 @@
 
 Each database structure check starts with an SQL query to the pg_catalog.
 
-1. [SQLFluff](https://github.com/sqlfluff/sqlfluff) is used as a linter for all sql queries
-2. All queries must be schema-aware, i.e. we filter out database objects on schema basis:
+1. [SQLFluff](https://github.com/sqlfluff/sqlfluff) is used as a linter for all SQL queries
+2. All queries must be schema-aware, i.e. we filter out database objects on a schema basis:
    ```sql
    where
        nsp.nspname = :schema_name_param::text
@@ -26,5 +26,5 @@ Each database structure check starts with an SQL query to the pg_catalog.
 6. All query results must be ordered in some way.
 7. All queries must have a brief description.
    Links to documentation or articles with detailed descriptions are welcome.
-8. Name of the sql-file with query must correspond to diagnostic name in [Java project](https://github.com/mfvanek/pg-index-health).
-9. Do not forget to update `README.md`.
+8. The name of the sql-file with a query must correspond to diagnostic name in [Java project](https://github.com/mfvanek/pg-index-health).
+9. Remember to update `README.md`.
