@@ -39,7 +39,7 @@ with
             t.oid as table_oid,
             bool_and(
                 a.attnotnull = false or
-                a.attnum = any (coalesce(pk.pk_attnums, '{}'))
+                a.attnum = any(coalesce(pk.pk_attnums, '{}'))
             ) as all_nonpk_nullable
         from
             target_tables t
