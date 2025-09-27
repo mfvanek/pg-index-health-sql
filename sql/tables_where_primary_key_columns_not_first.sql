@@ -45,7 +45,7 @@ with
     pk_columns as (
         select
             c.conrelid as table_oid,
-            pg_catalog.array_agg(a.attname order by a.attnum) as pk_columns
+            array_agg(a.attname order by a.attnum) as pk_columns
         from
             pg_catalog.pg_constraint c
             inner join target_tables t on t.oid = c.conrelid
