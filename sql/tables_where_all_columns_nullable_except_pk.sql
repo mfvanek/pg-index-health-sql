@@ -32,7 +32,7 @@ with
         where
             c.contype = 'p'
         group by c.conrelid
-     ),
+    ),
 
     all_nullable as (
         select
