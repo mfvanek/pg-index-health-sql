@@ -37,6 +37,7 @@ with
     all_nullable as (
         select
             t.oid as table_oid,
+            count(*) filter (where pk.pk_attnums is null or a.attnum <> all(pk.pk_attnums)) as nonpk_count,
             bool_and(
                 a.attnotnull = false or
                 a.attnum = any(coalesce(pk.pk_attnums, '{}'))
@@ -57,5 +58,6 @@ select
 from
     all_nullable a
 where
-    a.all_nonpk_nullable = true
+    a.all_nonpk_nullable = true and
+    a.nonpk_count > 0 /* ensure there is at least one non-pk column */
 order by table_name;
