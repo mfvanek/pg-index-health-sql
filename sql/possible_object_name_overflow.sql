@@ -69,6 +69,8 @@ with
             pg_catalog.pg_constraint c
             inner join nsp on nsp.oid = c.connamespace
             inner join t on t.max_identifier_length = length(c.conname)
+        where
+            c.conparentid = 0 and c.coninhcount = 0 /* not a constraint in a partition */
     )
 
 select *
