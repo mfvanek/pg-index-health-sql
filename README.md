@@ -13,7 +13,6 @@ It enables lightweight, database-native analysis without requiring external libr
 
 ## Supported PostgreSQL versions
 
-[![PostgreSQL 13](https://img.shields.io/badge/PostgreSQL-13-green.svg)](https://www.postgresql.org/about/news/postgresql-13-released-2077/ "PostgreSQL 13")
 [![PostgreSQL 14](https://img.shields.io/badge/PostgreSQL-14-green.svg)](https://www.postgresql.org/about/news/postgresql-14-released-2318/ "PostgreSQL 14")
 [![PostgreSQL 15](https://img.shields.io/badge/PostgreSQL-15-green.svg)](https://www.postgresql.org/about/news/postgresql-15-released-2526/ "PostgreSQL 15")
 [![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-green.svg)](https://www.postgresql.org/about/news/postgresql-16-released-2715/ "PostgreSQL 16")
@@ -81,7 +80,7 @@ docker run \
   -e USE_FIND_ALGORITHM=true \
   -e VALIDATE_SQLFLUFF=true \
   -v $(pwd):/tmp/lint \
-  ghcr.io/super-linter/super-linter:slim-v8.1.0
+  ghcr.io/super-linter/super-linter:slim-v8.2.1
 ```
 
 #### Windows
@@ -94,7 +93,7 @@ docker run ^
   -e USE_FIND_ALGORITHM=true ^
   -e VALIDATE_SQLFLUFF=true ^
   -v "%cd%":/tmp/lint ^
-  ghcr.io/super-linter/super-linter:slim-v8.1.0
+  ghcr.io/super-linter/super-linter:slim-v8.2.1
 ```
 
 See https://github.com/super-linter/super-linter/blob/main/dependencies/python/sqlfluff.txt
