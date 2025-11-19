@@ -65,6 +65,7 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 35. Columns with a [timestamp](https://wiki.postgresql.org/wiki/Don't_Do_This#Don.27t_use_timestamp_.28without_time_zone.29) type ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_timestamp_or_timetz_type.sql)).
 36. Tables where the primary key columns are not first ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_where_primary_key_columns_not_first.sql)).
 37. Tables that have all columns besides the primary key that are nullable ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_where_all_columns_nullable_except_pk.sql)).
+38. Columns with [char(n) type](https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don't_use_char(n)) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_char_type.sql)).
 
 ## Local development
 

@@ -6,7 +6,7 @@
  */
 
 -- Finds primary keys with columns of varchar(32/36/38) type.
--- Usually these columns should use built-in uuid type.
+-- Usually these columns should use a built-in uuid type.
 --
 -- See https://www.postgresql.org/docs/17/datatype-uuid.html
 -- b9b1f6f5-7f90-4b68-a389-f0ad8bb5784b - with dashes - 36 characters
