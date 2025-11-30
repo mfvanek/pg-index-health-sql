@@ -19,5 +19,6 @@ from
     inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
 where
     pc.relkind = 'r' and
+    not pc.relispartition and /* skip partitioned tables */
     nsp.nspname = :schema_name_param::text
 order by table_name;
