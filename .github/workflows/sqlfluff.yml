@@ -1,0 +1,30 @@
+name: Lint SQL with SQLFluff
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'sql/ext/**/*.sql'
+      - '.sqlfluff'
+  pull_request:
+    paths:
+      - 'sql/ext/**/*.sql'
+      - '.sqlfluff'
+
+jobs:
+  lint-sql:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install SQLFluff
+        run: pip install sqlfluff
+
+      - name: Run SQLFluff
+        run: sqlfluff lint sql/ext --config .sqlfluff
