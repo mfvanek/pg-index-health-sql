@@ -1,16 +1,16 @@
 name: Lint SQL with SQLFluff
-
+permissions:
+  contents: read
 on:
   push:
-    branches: [ master ]
+    branches: [master]
     paths:
-      - 'sql/**/*.sql'
-      - '.sqlfluff'
+      - "sql/**/*.sql"
+      - ".sqlfluff"
   pull_request:
     paths:
-      - 'sql/**/*.sql'
-      - '.sqlfluff'
-
+      - "sql/**/*.sql"
+      - ".sqlfluff"
 jobs:
   lint-sql:
     runs-on: ubuntu-latest
@@ -21,7 +21,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install SQLFluff
         run: pip install sqlfluff==0.3.6
