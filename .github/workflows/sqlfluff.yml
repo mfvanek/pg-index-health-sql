@@ -27,4 +27,4 @@ jobs:
         run: pip install sqlfluff==0.3.6
 
       - name: Run SQLFluff
-        run: sqlfluff lint sql --config .sqlfluff
+        run: sqlfluff lint sql --config .github/linters/.sqlfluff
