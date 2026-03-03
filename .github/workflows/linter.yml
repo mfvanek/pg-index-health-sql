@@ -1,30 +1,26 @@
-name: Lint SQL with SQLFluff
+name: Lint Code Base
 
 on:
   push:
-    branches: [master]
-    paths:
-      - "sql/**/*.sql"
-      - ".sqlfluff"
+    branches:
+      - master
   pull_request:
-    paths:
-      - "sql/**/*.sql"
-      - ".sqlfluff"
 
 jobs:
-  lint-sql:
+  build:
+    name: Lint Code Base
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Checkout Code
+        uses: actions/checkout@v6
         with:
-          python-version: "3.11"
+          # Full git history is needed to get a proper list of changed files within `super-linter`
+          fetch-depth: 0
 
-      - name: Install SQLFluff
-        run: pip install sqlfluff==0.3.6
-
-      - name: Run SQLFluff
-        run: sqlfluff lint sql --config .github/linters/.sqlfluff
+      - name: Lint Code Base
+        uses: super-linter/super-linter/slim@v8.5.0
+        env:
+          VALIDATE_ALL_CODEBASE: false
+          VALIDATE_SQLFLUFF: true
+          DEFAULT_BRANCH: master
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
