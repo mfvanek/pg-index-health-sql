@@ -25,9 +25,9 @@ with
             quote_ident(c.conname) as constraint_name
         from
             pg_catalog.pg_constraint c
-                inner join pg_catalog.pg_namespace nsp on nsp.oid = c.connamespace
-                inner join lateral unnest(c.conkey) with ordinality u(attnum, attposition) on true
-                inner join pg_catalog.pg_attribute col on col.attrelid = c.conrelid and col.attnum = u.attnum
+            inner join pg_catalog.pg_namespace nsp on nsp.oid = c.connamespace
+            inner join lateral unnest(c.conkey) with ordinality u(attnum, attposition) on true
+            inner join pg_catalog.pg_attribute col on col.attrelid = c.conrelid and col.attnum = u.attnum
         where
             c.contype = 'f' and
             array_length(c.conkey, 1) > 1 and
