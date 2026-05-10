@@ -10,12 +10,13 @@ Each database structure check starts with an SQL query to the pg_catalog.
    where
        nsp.nspname = :schema_name_param::text
    ```
-3. All tables and indexes names in the query results must be schema-qualified.
+3. All tables, sequence and indexes names in the query results must be schema-qualified.
    We use `::regclass` on `oid` for that.
    ```sql
    select
        psui.relid::regclass::text as table_name,
-       psui.indexrelid::regclass::text as index_name
+       psui.indexrelid::regclass::text as index_name,
+       s.seqrelid::regclass::text as sequence_name
    ```
 4. All names should be enclosed in double quotes, if required.
 5. The columns for the index or foreign key must be returned in the order they are used in the index or foreign key:

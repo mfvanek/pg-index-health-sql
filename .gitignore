@@ -1,2 +1,3 @@
 .idea
 /.sqlfluff
+/.claude/settings.local.json
