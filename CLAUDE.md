@@ -150,6 +150,14 @@ sql/ext/          # Extension-dependent queries (requires pg_stat_statements)
 3. Update `README.md` to add the check to the table.
 4. Open a PR linked to an existing issue; complete every item in the PR checklist.
 
+### Object-level vs column-level checks
+When a check applies to both database objects (tables, indexes, sequences, views, functions, constraints) and columns, split it into two separate files:
+- `objects_*.sql` — covers object-level names only; returns `object_name` and `object_type`.
+- `columns_*.sql` — covers column-level names only; returns `table_name`, `column_not_null`, and `column_name`.
+
+See `objects_with_upper_case_names.sql` / `columns_with_upper_case_names.sql` and
+`objects_not_following_naming_convention.sql` / `columns_not_following_naming_convention.sql` as examples.
+
 ## Supported PostgreSQL Versions
 
 PostgreSQL 14, 15, 16, 17, and 18. PostgreSQL 13 and earlier are not supported.
