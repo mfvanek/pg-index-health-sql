@@ -6,7 +6,8 @@
  */
 
 -- Finds columns whose names do not follow naming convention (that have to be enclosed in double-quotes).
--- You should avoid using quoted column names.
+-- Also finds columns whose names contain uppercase letters.
+-- You should avoid using quoted column names. Prefer names_like_this over NamesLike-this.
 --
 -- See https://www.postgresql.org/docs/17/sql-syntax-lexical.html#SQL-SYNTAX-IDENTIFIERS
 -- See also https://lerner.co.il/2013/11/30/quoting-postgresql/
