@@ -2,7 +2,7 @@
 
 ### Write a new SQL query
 
-Each database structure check starts with an SQL query to the pg_catalog.
+Each database structure check starts with an SQL query against `pg_catalog`.
 
 1. [SQLFluff](https://github.com/sqlfluff/sqlfluff) is used as a linter for all SQL queries
 2. Use only lowercase for all SQL keywords, functions, and identifiers.
@@ -29,7 +29,7 @@ Each database structure check starts with an SQL query to the pg_catalog.
      Some checks intentionally include child partitions — document the reason in a comment when deviating from this rule.
    - **Index-based checks** — exclude child partition tables: `not pc.relispartition`.
    - **Constraint-based checks** — exclude constraints inherited into partitions: `c.conparentid = 0 and c.coninhcount = 0`.
-9. All tables, sequences and indexes names in the query results must be schema-qualified.
+9. All table, sequence, and index names in the query results must be schema-qualified.
    We use `::regclass` on `oid` for that.
    ```sql
    select
@@ -38,7 +38,7 @@ Each database structure check starts with an SQL query to the pg_catalog.
        s.seqrelid::regclass::text as sequence_name
    ```
 10. All names should be enclosed in double quotes, if required.
-11. The columns for the index or foreign key must be returned in the order they are used in the index or foreign key:
+11. Index and foreign key columns must be returned in the order they appear in the index or constraint definition:
     ```sql
     select
         array_agg(quote_ident(a.attname) || ',' || a.attnotnull::text order by u.ordinality) as columns
@@ -46,5 +46,5 @@ Each database structure check starts with an SQL query to the pg_catalog.
 12. All query results must be ordered in some way.
 13. All queries must have a brief description.
     Links to documentation or articles with detailed descriptions are welcome.
-14. The name of the sql-file with a query must correspond to diagnostic name in [Java project](https://github.com/mfvanek/pg-index-health).
+14. The SQL file name must match the corresponding diagnostic name in the [Java project](https://github.com/mfvanek/pg-index-health).
 15. Remember to update `README.md`.
