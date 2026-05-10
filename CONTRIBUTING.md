@@ -47,4 +47,10 @@ Each database structure check starts with an SQL query against `pg_catalog`.
 13. All queries must have a brief description.
     Links to documentation or articles with detailed descriptions are welcome.
 14. The SQL file name must match the corresponding diagnostic name in the [Java project](https://github.com/mfvanek/pg-index-health).
-15. Remember to update `README.md`.
+15. When a check applies to both database objects (tables, indexes, sequences, views, functions, constraints) and columns, split it into two separate files:
+    - `objects_*.sql` — covers object-level names only; returns `object_name` and `object_type`.
+    - `columns_*.sql` — covers column-level names only; returns `table_name`, `column_not_null`, and `column_name`.
+
+    See `objects_with_upper_case_names.sql` / `columns_with_upper_case_names.sql` and
+    `objects_not_following_naming_convention.sql` / `columns_not_following_naming_convention.sql` as examples.
+16. Remember to update `README.md`.

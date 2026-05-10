@@ -5,14 +5,14 @@
  * Licensed under the Apache License 2.0
  */
 
--- Finds columns of type 'json'. Use 'jsonb' instead.
+-- Finds columns whose names contain uppercase letters.
+-- Prefer names_like_this over NamesLikeThis.
+-- PostgreSQL folds unquoted identifiers to lowercase, so using uppercase forces you to always quote the identifier.
 --
--- See also https://www.postgresql.org/docs/current/datatype-json.html
--- and https://medium.com/geekculture/postgres-jsonb-usage-and-performance-analysis-cdbd1242a018
+-- See also https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_upper_case_table_or_column_names
 select
     pc.oid::regclass::text as table_name,
     col.attnotnull as column_not_null,
-    col.atttypid::regtype::text as column_type,
     quote_ident(col.attname) as column_name
 from
     pg_catalog.pg_class pc
@@ -23,6 +23,6 @@ where
     not pc.relispartition and
     col.attnum > 0 and /* to filter out system columns such as oid, ctid, xmin, xmax, etc. */
     not col.attisdropped and
-    col.atttypid = 'json'::regtype and
+    col.attname ~ '[A-Z]' and
     nsp.nspname = :schema_name_param::text
 order by table_name, column_name;

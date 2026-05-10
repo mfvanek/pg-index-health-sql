@@ -13,13 +13,13 @@ select
     pg_relation_size(pi.indexrelid) as index_size
 from
     pg_catalog.pg_index pi
-    inner join pg_catalog.pg_class ic on ic.oid = pi.indexrelid
-    inner join pg_catalog.pg_namespace nsp on nsp.oid = ic.relnamespace
+    inner join pg_catalog.pg_class pc on pc.oid = pi.indexrelid
+    inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
     inner join pg_catalog.pg_attribute a on a.attrelid = pi.indrelid and a.attnum = any(pi.indkey)
 where
     not pi.indisunique and
     not a.attnotnull and
-    not ic.relispartition and
+    not pc.relispartition and
     nsp.nspname = :schema_name_param::text and
     array_position(pi.indkey, a.attnum) = 0 and /* only for the first segment */
     (pi.indpred is null or (position(lower(a.attname) in lower(pg_get_expr(pi.indpred, pi.indrelid))) = 0))
