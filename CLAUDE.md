@@ -58,6 +58,19 @@ and this filtering condition must appear exactly once per query file:
 where nsp.nspname = :schema_name_param::text
 ```
 
+### Table aliases
+Use the same aliases as the existing SQL files for consistency. The established conventions are:
+
+| Table | Alias |
+|---|---|
+| `pg_catalog.pg_namespace` | `nsp` |
+| `pg_catalog.pg_class` | `pc` |
+| `pg_catalog.pg_index` | `pi` |
+| `pg_catalog.pg_attribute` | `col` |
+| `pg_catalog.pg_constraint` | `c` |
+| `pg_catalog.pg_stat_user_indexes` | `psui` |
+| `pg_catalog.pg_stat_all_indexes` | `psai` |
+
 ### System catalog usage
 Always query `pg_catalog` system tables — never `information_schema`. All `pg_catalog` table references must be fully schema-qualified:
 ```sql
