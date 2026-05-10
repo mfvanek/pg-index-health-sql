@@ -52,7 +52,8 @@ Every SQL file must follow these standards (enforced in PR review):
 ```
 
 ### Schema filtering (mandatory)
-All queries must filter by schema using the `:schema_name_param` bind parameter:
+All queries must filter by schema using the `:schema_name_param` bind parameter,
+and this filtering condition must appear exactly once per query file:
 ```sql
 where nsp.nspname = :schema_name_param::text
 ```
