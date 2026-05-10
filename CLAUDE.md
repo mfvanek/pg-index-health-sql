@@ -24,13 +24,13 @@ docker run \
   ghcr.io/super-linter/super-linter:slim-v8.6.0
 ```
 
-**Windows (CMD):**
-```bash
-docker run ^
-  -e RUN_LOCAL=true ^
-  -e USE_FIND_ALGORITHM=true ^
-  -e VALIDATE_SQLFLUFF=true ^
-  -v "%cd%":/tmp/lint ^
+**Windows (PowerShell):**
+```powershell
+docker run `
+  -e RUN_LOCAL=true `
+  -e USE_FIND_ALGORITHM=true `
+  -e VALIDATE_SQLFLUFF=true `
+  -v "${PWD}:/tmp/lint" `
   ghcr.io/super-linter/super-linter:slim-v8.6.0
 ```
 
