@@ -27,9 +27,9 @@ with
                 else null::text
             end as sequence_name
         from
-            pg_catalog.pg_class t
-            inner join pg_catalog.pg_namespace nsp on nsp.oid = t.relnamespace
-            inner join pg_catalog.pg_attribute col on col.attrelid = t.oid
+            pg_catalog.pg_class pc
+            inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
+            inner join pg_catalog.pg_attribute col on col.attrelid = pc.oid
             inner join pg_catalog.pg_attrdef ad on ad.adrelid = col.attrelid and ad.adnum = col.attnum
             left join lateral (
                 select sum(case when c.contype = 'p' then +1 else -1 end) as res
@@ -42,8 +42,8 @@ with
                 group by c.conrelid, c.conkey[1]
             ) c on true
         where
-            t.relkind in ('r', 'p') and
-            not t.relispartition and
+            pc.relkind in ('r', 'p') and
+            not pc.relispartition and
             col.attnum > 0 and /* to filter out system columns such as oid, ctid, xmin, xmax, etc. */
             not col.attisdropped and
             col.atttypid = any('{int,int8,int2}'::regtype[]) and

@@ -32,9 +32,9 @@ with
             end as column_type,
             pg_get_expr(ad.adbin, ad.adrelid) as column_default_value
         from
-            pg_catalog.pg_class t
-            inner join nsp on nsp.oid = t.relnamespace
-            inner join pg_catalog.pg_attribute col on col.attrelid = t.oid
+            pg_catalog.pg_class pc
+            inner join nsp on nsp.oid = pc.relnamespace
+            inner join pg_catalog.pg_attribute col on col.attrelid = pc.oid
             inner join pg_catalog.pg_constraint c on c.conrelid = col.attrelid and col.attnum = any(c.conkey)
             inner join pg_catalog.pg_attrdef ad on ad.adrelid = col.attrelid and ad.adnum = col.attnum
             inner join pg_catalog.pg_depend dep on dep.refobjid = col.attrelid and dep.refobjsubid = col.attnum
