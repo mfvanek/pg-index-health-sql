@@ -29,7 +29,7 @@ Each database structure check starts with an SQL query to the pg_catalog.
      Some checks intentionally include child partitions — document the reason in a comment when deviating from this rule.
    - **Index-based checks** — exclude child partition tables: `not pc.relispartition`.
    - **Constraint-based checks** — exclude constraints inherited into partitions: `c.conparentid = 0 and c.coninhcount = 0`.
-9. All tables, sequence and indexes names in the query results must be schema-qualified.
+9. All tables, sequences and indexes names in the query results must be schema-qualified.
    We use `::regclass` on `oid` for that.
    ```sql
    select
