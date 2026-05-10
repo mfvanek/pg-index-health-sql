@@ -40,6 +40,9 @@ SQLFluff configuration lives in `.github/linters/.sqlfluff` (PostgreSQL dialect,
 
 Every SQL file must follow these standards (enforced in PR review):
 
+### Lowercase only
+All SQL keywords, functions, and identifiers must be written in lowercase. No uppercase or mixed-case SQL.
+
 ### Required file header
 ```sql
 /*
