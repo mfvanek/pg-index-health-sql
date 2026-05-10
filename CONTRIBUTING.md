@@ -15,7 +15,7 @@ Each database structure check starts with an SQL query to the pg_catalog.
     pg_index pi
     information_schema.columns
     ```
-5. Use the same aliases as the existing SQL files for consistency.
+5. Use the same table aliases as the existing SQL files for consistency.
 6. Use the same column aliases as the existing SQL files.
 7. All queries must be schema-aware, i.e. we filter out database objects on a schema basis:
    ```sql
