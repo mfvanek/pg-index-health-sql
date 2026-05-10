@@ -63,21 +63,6 @@ with
             c.conname ~ '[A-Z]' and
             c.conparentid = 0 and c.coninhcount = 0 /* not a constraint in a partition */
 
-        union all
-
-        select
-            pc.oid::regclass::text || '.' || quote_ident(col.attname) as object_name,
-            'column' as object_type
-        from
-            pg_catalog.pg_attribute col
-            inner join pg_catalog.pg_class pc on pc.oid = col.attrelid
-            inner join nsp on nsp.oid = pc.relnamespace
-        where
-            pc.relkind in ('r', 'p') and
-            /* decided not to filter by the pc.relispartition field here */
-            col.attnum > 0 and
-            not col.attisdropped and
-            col.attname ~ '[A-Z]'
     )
 
 select *
