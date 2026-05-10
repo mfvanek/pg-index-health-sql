@@ -58,6 +58,16 @@ and this filtering condition must appear exactly once per query file:
 where nsp.nspname = :schema_name_param::text
 ```
 
+### System catalog usage
+Always query `pg_catalog` system tables — never `information_schema`. All `pg_catalog` table references must be fully schema-qualified:
+```sql
+-- correct
+pg_catalog.pg_index pi
+-- wrong
+pg_index pi
+information_schema.columns
+```
+
 ### OID-to-name conversion
 Use `::regclass::text` for table, sequence and index names — never raw OIDs:
 ```sql
