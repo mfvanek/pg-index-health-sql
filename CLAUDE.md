@@ -58,6 +58,24 @@ and this filtering condition must appear exactly once per query file:
 where nsp.nspname = :schema_name_param::text
 ```
 
+### Result set column aliases
+Use the same column aliases as the existing SQL files. The established conventions are:
+
+| Concept | Alias |
+|---|---|
+| Table name | `table_name` |
+| Index name | `index_name` |
+| Sequence name | `sequence_name` |
+| Column name | `column_name` |
+| Column data type | `column_type` |
+| Whether column is NOT NULL | `column_not_null` |
+| Array of column names | `columns` |
+| Constraint name | `constraint_name` |
+| Table size in bytes | `table_size` |
+| Index size in bytes | `index_size` |
+| Bloat size in bytes | `bloat_size` |
+| Bloat percentage | `bloat_percentage` |
+
 ### Table aliases
 Use the same aliases as the existing SQL files for consistency. The established conventions are:
 
