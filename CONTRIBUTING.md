@@ -14,13 +14,14 @@ Each database structure check starts with an SQL query to the pg_catalog.
     pg_index pi
     information_schema.columns
     ```
-4. All queries must be schema-aware, i.e. we filter out database objects on a schema basis:
+4. Use the same aliases as the existing SQL files for consistency.
+5. All queries must be schema-aware, i.e. we filter out database objects on a schema basis:
    ```sql
    where
        nsp.nspname = :schema_name_param::text
    ```
    This filtering condition must appear exactly once per query file.
-5. All tables, sequence and indexes names in the query results must be schema-qualified.
+6. All tables, sequence and indexes names in the query results must be schema-qualified.
    We use `::regclass` on `oid` for that.
    ```sql
    select
@@ -28,14 +29,14 @@ Each database structure check starts with an SQL query to the pg_catalog.
        psui.indexrelid::regclass::text as index_name,
        s.seqrelid::regclass::text as sequence_name
    ```
-6. All names should be enclosed in double quotes, if required.
-7. The columns for the index or foreign key must be returned in the order they are used in the index or foreign key:
+7. All names should be enclosed in double quotes, if required.
+8. The columns for the index or foreign key must be returned in the order they are used in the index or foreign key:
    ```sql
    select
        array_agg(quote_ident(a.attname) || ',' || a.attnotnull::text order by u.ordinality) as columns
    ```
-8. All query results must be ordered in some way.
-9. All queries must have a brief description.
-   Links to documentation or articles with detailed descriptions are welcome.
-10. The name of the sql-file with a query must correspond to diagnostic name in [Java project](https://github.com/mfvanek/pg-index-health).
-11. Remember to update `README.md`.
+9. All query results must be ordered in some way.
+10. All queries must have a brief description.
+    Links to documentation or articles with detailed descriptions are welcome.
+11. The name of the sql-file with a query must correspond to diagnostic name in [Java project](https://github.com/mfvanek/pg-index-health).
+12. Remember to update `README.md`.
