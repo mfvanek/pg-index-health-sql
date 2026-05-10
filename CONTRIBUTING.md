@@ -23,7 +23,13 @@ Each database structure check starts with an SQL query to the pg_catalog.
        nsp.nspname = :schema_name_param::text
    ```
    This filtering condition must appear exactly once per query file.
-8. All tables, sequence and indexes names in the query results must be schema-qualified.
+8. If a check is applicable to partitioned tables, it must support them explicitly.
+   The approach depends on the check:
+   - **Table-based checks** — include partitioned parent tables (`relkind in ('r', 'p')`) and exclude child partitions (`not pc.relispartition`).
+     Some checks intentionally include child partitions — document the reason in a comment when deviating from this rule.
+   - **Index-based checks** — exclude child partition tables: `not pc.relispartition`.
+   - **Constraint-based checks** — exclude constraints inherited into partitions: `c.conparentid = 0 and c.coninhcount = 0`.
+9. All tables, sequence and indexes names in the query results must be schema-qualified.
    We use `::regclass` on `oid` for that.
    ```sql
    select
@@ -31,14 +37,14 @@ Each database structure check starts with an SQL query to the pg_catalog.
        psui.indexrelid::regclass::text as index_name,
        s.seqrelid::regclass::text as sequence_name
    ```
-9. All names should be enclosed in double quotes, if required.
-10. The columns for the index or foreign key must be returned in the order they are used in the index or foreign key:
+10. All names should be enclosed in double quotes, if required.
+11. The columns for the index or foreign key must be returned in the order they are used in the index or foreign key:
     ```sql
     select
         array_agg(quote_ident(a.attname) || ',' || a.attnotnull::text order by u.ordinality) as columns
     ```
-11. All query results must be ordered in some way.
-12. All queries must have a brief description.
+12. All query results must be ordered in some way.
+13. All queries must have a brief description.
     Links to documentation or articles with detailed descriptions are welcome.
-13. The name of the sql-file with a query must correspond to diagnostic name in [Java project](https://github.com/mfvanek/pg-index-health).
-14. Remember to update `README.md`.
+14. The name of the sql-file with a query must correspond to diagnostic name in [Java project](https://github.com/mfvanek/pg-index-health).
+15. Remember to update `README.md`.

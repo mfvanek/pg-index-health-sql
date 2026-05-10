@@ -54,6 +54,13 @@ All SQL keywords, functions, and identifiers must be written in lowercase. No up
 -- Brief description of what this check detects
 ```
 
+### Partitioned tables
+If a check is applicable to partitioned tables, it must support them explicitly. The approach depends on the check:
+
+- **Table-based checks** — include partitioned parent tables (`relkind in ('r', 'p')`) and exclude child partitions (`not pc.relispartition`). Some checks intentionally include child partitions — document the reason in a comment when deviating.
+- **Index-based checks** — exclude child partition tables: `not pc.relispartition`.
+- **Constraint-based checks** — exclude constraints inherited into partitions: `c.conparentid = 0 and c.coninhcount = 0`.
+
 ### Schema filtering (mandatory)
 All queries must filter by schema using the `:schema_name_param` bind parameter,
 and this filtering condition must appear exactly once per query file:
