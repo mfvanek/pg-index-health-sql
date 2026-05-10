@@ -62,7 +62,6 @@ with
         where
             c.conname ~ '[A-Z]' and
             c.conparentid = 0 and c.coninhcount = 0 /* not a constraint in a partition */
-
     )
 
 select *
