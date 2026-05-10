@@ -18,16 +18,16 @@ with
             s.seqmax as max_value,
             s.seqincrement as increment_by,
             case
-                when has_sequence_privilege(c.oid, 'select,usage'::text) then pg_sequence_last_value(c.oid::regclass)
+                when has_sequence_privilege(pc.oid, 'select,usage'::text) then pg_sequence_last_value(pc.oid::regclass)
                 else null::bigint
             end as last_value
         from
             pg_catalog.pg_sequence s
-            inner join pg_catalog.pg_class c on c.oid = s.seqrelid
-            left join pg_catalog.pg_namespace nsp on nsp.oid = c.relnamespace
+            inner join pg_catalog.pg_class pc on pc.oid = s.seqrelid
+            left join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
         where
             not pg_is_other_temp_schema(nsp.oid) and /* not temporary */
-            c.relkind = 'S'::char and /* sequence object */
+            pc.relkind = 'S'::char and /* sequence object */
             not s.seqcycle and /* skip cycle sequences */
             nsp.nspname = :schema_name_param::text
     ),

@@ -14,7 +14,7 @@ select
     pc.oid::regclass::text as table_name,
     pg_table_size(pc.oid) as table_size
 from
-    pg_catalog.pg_class pc
+        pg_catalog.pg_class pc
     inner join pg_catalog.pg_inherits i on i.inhrelid = pc.oid /* child table oid */
     inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
 where
