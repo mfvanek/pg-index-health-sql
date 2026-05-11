@@ -33,7 +33,7 @@ with
             sum(pc.relpages) as total_pages
         from
             tables_in_schema tis
-            cross join lateral pg_catalog.pg_partition_tree(tis.oid) ppt
+            inner join lateral pg_catalog.pg_partition_tree(tis.oid) ppt on true
             inner join pg_catalog.pg_class pc on pc.oid = ppt.relid
         where
             tis.relkind = 'p' and
