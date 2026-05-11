@@ -10,6 +10,8 @@
 -- For partitioned tables, aggregates relpages across all leaf partitions via pg_partition_tree(),
 -- since the partitioned parent itself never stores data and always has relpages = 0.
 -- Note: tables that had rows deleted but not yet vacuumed will still have relpages > 0 and won't appear here.
+--
+-- See also schemacrawler.tools.linter.LinterTableEmpty https://www.schemacrawler.com/lint.html
 with
     tables_in_schema as (
         select
