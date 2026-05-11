@@ -6,18 +6,45 @@
  */
 
 -- Finds tables that appear to be empty based on pg_catalog statistics.
--- relpages = 0 means no data pages are allocated; reltuples <= 0 means confirmed empty or never analyzed.
+-- For regular tables, uses relpages = 0 (no data pages allocated) as the signal.
+-- For partitioned tables, aggregates relpages across all leaf partitions via pg_partition_tree(),
+-- since the partitioned parent itself never stores data and always has relpages = 0.
 -- Note: tables that had rows deleted but not yet vacuumed will still have relpages > 0 and won't appear here.
+with
+    tables_in_schema as (
+        select
+            pc.oid,
+            pc.relkind,
+            pc.relpages
+        from
+            pg_catalog.pg_class pc
+            inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
+        where
+            nsp.nspname = :schema_name_param::text and
+            pc.relkind in ('r', 'p') and
+            not pc.relispartition
+    ),
+
+    partition_pages as (
+        select
+            tis.oid as root_oid,
+            sum(pc.relpages) as total_pages
+        from
+            tables_in_schema tis
+            cross join lateral pg_catalog.pg_partition_tree(tis.oid) ppt
+            inner join pg_catalog.pg_class pc on pc.oid = ppt.relid
+        where
+            tis.relkind = 'p' and
+            ppt.isleaf
+        group by tis.oid
+    )
+
 select
-    pc.oid::regclass::text as table_name,
-    pg_table_size(pc.oid) as table_size
+    tis.oid::regclass::text as table_name,
+    pg_table_size(tis.oid) as table_size
 from
-    pg_catalog.pg_class pc
-    inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
+    tables_in_schema tis
+    left join partition_pages pp on pp.root_oid = tis.oid
 where
-    pc.relkind in ('r', 'p') and
-    not pc.relispartition and
-    pc.relpages = 0 and
-    pc.reltuples <= 0 and
-    nsp.nspname = :schema_name_param::text
+    coalesce(pp.total_pages, tis.relpages) = 0
 order by table_name;
