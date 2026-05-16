@@ -7,6 +7,22 @@
 
 -- Finds self-referenced foreign keys (where a table references itself) with no ON DELETE rule or with ON DELETE RESTRICT.
 --
+-- Self-referenced foreign keys are commonly used to model hierarchical or tree-structured data,
+-- such as category trees, organizational charts, threaded comments, or bill-of-materials.
+--
+-- When the ON DELETE action is NO ACTION (the default when no rule is specified) or RESTRICT,
+-- deleting a parent row that is still referenced by child rows will fail with a foreign key violation error.
+-- To remove a node from such a hierarchy, the application must first recursively delete or re-parent
+-- all descendants, which requires complex logic and careful transaction ordering.
+-- In high-concurrency scenarios this also increases the risk of deadlocks.
+--
+-- Preferred alternatives:
+--   ON DELETE CASCADE  - automatically removes all descendant rows when a parent is deleted;
+--                        safe when the entire subtree should be removed together.
+--   ON DELETE SET NULL - sets the FK column to NULL in child rows, detaching them from the deleted parent
+--                        and turning them into new root nodes; requires the FK column to be nullable.
+--
+-- See https://www.postgresql.org/docs/current/ddl-constraints.html#DDL-CONSTRAINTS-FK
 -- See also schemacrawler.tools.linter.LinterForeignKeySelfReference https://www.schemacrawler.com/lint.html
 select
     c.conrelid::regclass::text as table_name,
