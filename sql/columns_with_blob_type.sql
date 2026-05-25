@@ -31,8 +31,9 @@ where
     not col.attisdropped and
     col.atttypid in (
         select pt.oid
-        from pg_catalog.pg_type pt
-        inner join pg_catalog.pg_namespace tn on tn.oid = pt.typnamespace
+        from
+            pg_catalog.pg_type pt
+            inner join pg_catalog.pg_namespace tn on tn.oid = pt.typnamespace
         where
             (pt.typname = 'oid' and tn.nspname = 'pg_catalog') or
             (pt.typname = 'lo' and pt.typtype = 'd') /* lo extension domain over oid */
