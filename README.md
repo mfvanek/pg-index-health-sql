@@ -69,8 +69,8 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 39. Tables with [inheritance](https://wiki.postgresql.org/wiki/Don%27t_Do_This#Don.27t_use_table_inheritance) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_with_inheritance.sql)).
 40. Multicolumn foreign keys where at least one of the referencing columns is nullable ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/foreign_keys_with_null_values.sql)).
 41. Tables with no data ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_with_no_data.sql)).
-42. Self-referenced foreign keys with no ON DELETE rule or with ON DELETE RESTRICT ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/self_referenced_foreign_keys.sql)).
-43. Tables with columns that reference PostgreSQL [large objects](https://www.postgresql.org/docs/current/largeobjects.html) stored in pg_largeobject (oid or [lo type](https://www.postgresql.org/docs/current/lo.html)) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_blob_type.sql)).
+42. Self-referenced foreign keys ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/self_referenced_foreign_keys.sql)).
+43. Columns with [large objects type (BLOB/CLOB)](https://www.postgresql.org/docs/current/largeobjects.html) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_blob_type.sql)).
 
 ## Local development
 
