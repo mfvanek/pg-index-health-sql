@@ -31,13 +31,23 @@ with
             not col.attisdropped and
             col.attname ~ '^\D+\d+$' and /* column name ends with digits and starts with at least one non-digit */
             nsp.nspname = :schema_name_param::text
+    ),
+
+    groups_with_two_or_more as (
+        select
+            oid,
+            base_name
+        from column_patterns
+        group by oid, base_name
+        having count(*) >= 2
     )
 
 select
-    table_name,
-    pg_table_size(oid) as table_size,
-    array_agg(quote_ident(attname) || ',' || attnotnull::text order by attposition) as columns
-from column_patterns
-group by oid, table_name, base_name
-having count(*) >= 2
-order by table_name, columns[1];
+    cp.table_name,
+    pg_table_size(cp.oid) as table_size,
+    array_agg(quote_ident(cp.attname) || ',' || cp.attnotnull::text order by cp.attposition) as columns
+from
+    column_patterns cp
+    inner join groups_with_two_or_more g on g.oid = cp.oid and g.base_name = cp.base_name
+group by cp.oid, cp.table_name
+order by cp.table_name;
