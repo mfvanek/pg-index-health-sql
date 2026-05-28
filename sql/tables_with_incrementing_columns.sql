@@ -9,8 +9,8 @@
 -- which indicates de-normalization that could be replaced with a separate child table and a foreign key.
 -- Groups columns by their shared base name (the non-numeric prefix) and reports any group of two or more.
 --
--- See https://www.schemacrawler.com/lint.html
 -- Similar to schemacrawler.tools.linter.LinterTableWithIncrementingColumns
+-- https://www.schemacrawler.com/lint.html
 with
     column_patterns as (
         select
