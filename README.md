@@ -72,6 +72,7 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 42. Self-referenced foreign keys ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/self_referenced_foreign_keys.sql)).
 43. Columns with [large objects type (BLOB/CLOB)](https://www.postgresql.org/docs/current/largeobjects.html) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_blob_type.sql)).
 44. Tables with incrementing column names ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_with_incrementing_columns.sql)).
+45. Columns with inconsistent types (the same name but different data types) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_inconsistent_types.sql)).
 
 ## Local development
 
