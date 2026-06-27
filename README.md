@@ -72,6 +72,7 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 42. Self-referenced foreign keys ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/self_referenced_foreign_keys.sql)).
 43. Columns with [large objects type (BLOB/CLOB)](https://www.postgresql.org/docs/current/largeobjects.html) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_blob_type.sql)).
 44. Tables with incrementing column names ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_with_incrementing_columns.sql)).
+45. Columns with inconsistent types (the same name but different data types) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_inconsistent_types.sql)).
 
 ## Local development
 
@@ -87,7 +88,7 @@ docker run \
   -e USE_FIND_ALGORITHM=true \
   -e VALIDATE_SQLFLUFF=true \
   -v $(pwd):/tmp/lint \
-  ghcr.io/super-linter/super-linter:slim-v8.6.0
+  ghcr.io/super-linter/super-linter:slim-v8.7.0
 ```
 
 #### Windows
@@ -100,7 +101,7 @@ docker run ^
   -e USE_FIND_ALGORITHM=true ^
   -e VALIDATE_SQLFLUFF=true ^
   -v "%cd%":/tmp/lint ^
-  ghcr.io/super-linter/super-linter:slim-v8.6.0
+  ghcr.io/super-linter/super-linter:slim-v8.7.0
 ```
 
 See https://github.com/super-linter/super-linter/blob/main/dependencies/python/sqlfluff.txt
@@ -110,5 +111,5 @@ docker run --rm ^
   -v "%cd%\.github\linters\.sqlfluff":/sql/.sqlfluff:ro ^
   -v "%cd%":/sql ^
   -e SQLFLUFF_CONFIG=/sql/.sqlfluff ^
-  sqlfluff/sqlfluff:4.1.0 lint /sql
+  sqlfluff/sqlfluff:4.2.2 lint /sql
 ```
