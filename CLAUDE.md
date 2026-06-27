@@ -2,6 +2,12 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Git Commits (for AI agents)
+
+**Never commit changes until the user explicitly asks.** Every commit must be approved by the user.
+Make and stage edits as needed, but do not run `git commit` (or `git push`) on your own initiative —
+wait for an explicit instruction such as "commit" or "push" from the user.
+
 ## Project Overview
 
 **pg-index-health-sql** is a collection of PostgreSQL diagnostic SQL queries that detect structural issues in database schemas.

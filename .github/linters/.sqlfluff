@@ -6,7 +6,7 @@ templater = raw
 
 [sqlfluff:indentation]
 indented_joins = True
-allow_implicit_indents = True
+implicit_indents = allow
 indented_on_contents = False
 indented_ctes = True
 
