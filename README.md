@@ -73,6 +73,8 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 43. Columns with [large objects type (BLOB/CLOB)](https://www.postgresql.org/docs/current/largeobjects.html) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_blob_type.sql)).
 44. Tables with incrementing column names ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/tables_with_incrementing_columns.sql)).
 45. Columns with inconsistent types (the same name but different data types) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_inconsistent_types.sql)).
+46. Unlogged tables (including unlogged partitioned tables) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/unlogged_tables.sql)).
+47. Unlogged sequences ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/unlogged_sequences.sql)).
 
 ## Local development
 
