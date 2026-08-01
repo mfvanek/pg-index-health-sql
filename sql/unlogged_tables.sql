@@ -5,7 +5,7 @@
  * Licensed under the Apache License 2.0
  */
 
--- Finds unlogged tables (including unlogged partitioned tables).
+-- Finds unlogged tables.
 -- Unlogged tables are not backed by WAL, so data in them is not replicated to standbys
 -- and will be truncated automatically after a server crash.
 -- They are unsuitable for storing persistent data.
