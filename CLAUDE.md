@@ -142,8 +142,24 @@ sql/              # One .sql file per diagnostic check (40+ checks)
 sql/ext/          # Extension-dependent queries (requires pg_stat_statements)
 .sqlfluff         # SQLFluff config (PostgreSQL dialect)
 .github/
-  workflows/      # CI: SQLFluff lint runs on push/PR
+  workflows/      # CI workflows (sqlfluff.yml: lints sql/ on push to master and on PRs)
+  dependabot.yml  # Weekly updates for GitHub Actions
 ```
+
+## GitHub Workflows and Badges
+
+- `.github/workflows/sqlfluff.yml` ("Lint with SQLFluff") is the only CI workflow. It runs the
+  `sqlfluff/sqlfluff` Docker image against the whole `sql/` directory and reports issues as GitHub annotations
+  (`--format github-annotation-native`). The config is picked up automatically from the root `.sqlfluff`.
+- Every workflow has a status badge at the top of `README.md`, next to the license badge. The badge text matches
+  the workflow `name:`, and both the image and the link point to the workflow file:
+  ```markdown
+  [![Lint with SQLFluff](https://github.com/mfvanek/pg-index-health-sql/actions/workflows/sqlfluff.yml/badge.svg)](https://github.com/mfvanek/pg-index-health-sql/actions/workflows/sqlfluff.yml)
+  ```
+- When adding, renaming or removing a workflow (file name or `name:`), update its badge in `README.md` in the same change,
+  and update the workflow references in this file.
+- Dependabot (`.github/dependabot.yml`) checks GitHub Actions versions weekly. When the SQLFluff image tag
+  (`docker://sqlfluff/sqlfluff:<version>`) changes, update the local lint commands in `README.md` and this file to match.
 
 ## Adding a New Check
 
