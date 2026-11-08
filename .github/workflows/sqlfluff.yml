@@ -15,4 +15,4 @@ jobs:
       - name: Run SQLFluff
         uses: docker://sqlfluff/sqlfluff:4.5.0
         with:
-          args: lint sql --config .github/linters/.sqlfluff
+          args: lint sql --config .github/linters/.sqlfluff --format github-annotation-native
