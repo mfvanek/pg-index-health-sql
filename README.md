@@ -2,7 +2,7 @@
 
 **pg-index-health-sql** is a collection of SQL queries for analyzing PostgreSQL schemas, detecting issues and promoting best practices.
 
-[![Lint Code Base](https://github.com/mfvanek/pg-index-health-sql/actions/workflows/linter.yml/badge.svg)](https://github.com/mfvanek/pg-index-health-sql/actions/workflows/linter.yml)
+[![Lint with SQLFluff](https://github.com/mfvanek/pg-index-health-sql/actions/workflows/sqlfluff.yml/badge.svg)](https://github.com/mfvanek/pg-index-health-sql/actions/workflows/sqlfluff.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/mfvanek/pg-index-health-sql/blob/master/LICENSE "Apache License 2.0")
 
 ## What is this?
