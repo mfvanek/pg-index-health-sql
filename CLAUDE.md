@@ -27,7 +27,7 @@ docker run \
   -e USE_FIND_ALGORITHM=true \
   -e VALIDATE_SQLFLUFF=true \
   -v $(pwd):/tmp/lint \
-  ghcr.io/super-linter/super-linter:slim-v8.7.0
+  ghcr.io/super-linter/super-linter:slim-v9.0.0
 ```
 
 **Windows (PowerShell):**
@@ -37,7 +37,7 @@ docker run `
   -e USE_FIND_ALGORITHM=true `
   -e VALIDATE_SQLFLUFF=true `
   -v "${PWD}:/tmp/lint" `
-  ghcr.io/super-linter/super-linter:slim-v8.7.0
+  ghcr.io/super-linter/super-linter:slim-v9.0.0
 ```
 
 SQLFluff configuration lives in `.github/linters/.sqlfluff` (PostgreSQL dialect, max line length 280).
