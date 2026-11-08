@@ -18,29 +18,25 @@ The SQL file names correspond 1:1 with diagnostic check names in the companion J
 
 ## Linting
 
-The only development tooling is **SQLFluff** for SQL linting. Run locally via Docker:
+The only development tooling is **SQLFluff** for SQL linting (CI: `.github/workflows/sqlfluff.yml`). Run locally via Docker:
 
 **Linux/macOS:**
 ```bash
-docker run \
-  -e RUN_LOCAL=true \
-  -e USE_FIND_ALGORITHM=true \
-  -e VALIDATE_SQLFLUFF=true \
-  -v $(pwd):/tmp/lint \
-  ghcr.io/super-linter/super-linter:slim-v9.0.0
+docker run --rm \
+  -v "$(pwd)":/sql \
+  sqlfluff/sqlfluff:4.5.0 lint /sql/sql
 ```
 
 **Windows (PowerShell):**
 ```powershell
-docker run `
-  -e RUN_LOCAL=true `
-  -e USE_FIND_ALGORITHM=true `
-  -e VALIDATE_SQLFLUFF=true `
-  -v "${PWD}:/tmp/lint" `
-  ghcr.io/super-linter/super-linter:slim-v9.0.0
+docker run --rm `
+  -v "${PWD}:/sql" `
+  sqlfluff/sqlfluff:4.5.0 lint /sql/sql
 ```
 
-SQLFluff configuration lives in `.github/linters/.sqlfluff` (PostgreSQL dialect, max line length 280).
+Keep the SQLFluff image tag in sync between the workflow, `README.md` and this file.
+
+SQLFluff configuration lives in `.sqlfluff` at the repository root (PostgreSQL dialect, max line length 280).
 
 ## SQL Query Conventions
 
@@ -144,9 +140,9 @@ Use `-- noqa: disable=RULE` inline comments when linter rules must be overridden
 ```
 sql/              # One .sql file per diagnostic check (40+ checks)
 sql/ext/          # Extension-dependent queries (requires pg_stat_statements)
+.sqlfluff         # SQLFluff config (PostgreSQL dialect)
 .github/
-  workflows/      # CI: SQLFluff lint runs on push/PR (changed files only)
-  linters/        # .sqlfluff config
+  workflows/      # CI: SQLFluff lint runs on push/PR
 ```
 
 ## Adding a New Check
