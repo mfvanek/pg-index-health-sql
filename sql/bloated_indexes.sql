@@ -20,8 +20,7 @@
 -- noqa: disable=PRS,ST06,AM06
 with
     indexes_data as (
-        select
-            pc.relname as inner_index_name,
+        select pc.relname as inner_index_name,
             pc.reltuples,
             pc.relpages,
             pi.indrelid as table_oid,
@@ -31,7 +30,7 @@ with
             coalesce(substring(array_to_string(pc.reloptions, ' ') from 'fillfactor=([0-9]+)')::smallint, 90) as fill_factor,
             string_to_array(textin(int2vectorout(pi.indkey)), ' ')::int[] as indkey
         from
-            pg_catalog.pg_index pi
+pg_catalog.pg_index pi
             inner join pg_catalog.pg_class pc on pc.oid = pi.indexrelid
             inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
         where
