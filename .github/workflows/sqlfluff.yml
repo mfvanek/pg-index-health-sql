@@ -1,0 +1,22 @@
+name: Lint with SQLFluff
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  lint-sql:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v7
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.14"
+      - name: Install SQLFluff
+        run: pip install sqlfluff==4.5.0
+      - name: Run SQLFluff
+        run: sqlfluff lint sql --config .github/linters/.sqlfluff
