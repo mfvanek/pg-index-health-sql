@@ -113,5 +113,5 @@ docker run --rm ^
   -v "%cd%\.github\linters\.sqlfluff":/sql/.sqlfluff:ro ^
   -v "%cd%":/sql ^
   -e SQLFLUFF_CONFIG=/sql/.sqlfluff ^
-  sqlfluff/sqlfluff:4.2.2 lint /sql
+  sqlfluff/sqlfluff:4.3.0 lint /sql
 ```
