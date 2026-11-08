@@ -7,6 +7,7 @@
 
 -- Finds foreign keys for which no index was created in the referencing (child) table.
 -- This will cause the child table to be scanned sequentially when deleting an entry from the referenced (parent) table.
+-- Partial and invalid indexes are not considered as covering the foreign key.
 select
     c.conrelid::regclass::text as table_name,
     quote_ident(c.conname) as constraint_name,
@@ -25,6 +26,8 @@ where
         from pg_catalog.pg_index pi
         where
             pi.indrelid = c.conrelid and
+            pi.indpred is null and /* partial index cannot serve lookups by the foreign key */
+            pi.indisvalid and /* invalid index is not used by the planner */
             (c.conkey::int[] <@ pi.indkey::int[]) and /* all columns of foreign key have to present in index */
             array_position(pi.indkey::int[], (c.conkey::int[])[1]) = 0 /* ordering of columns in foreign key and in index is the same */
     )
