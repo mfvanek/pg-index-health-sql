@@ -75,6 +75,7 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 45. Columns with inconsistent types (the same name but different data types) ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_inconsistent_types.sql)).
 46. Unlogged tables ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/unlogged_tables.sql)).
 47. Unlogged sequences ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/unlogged_sequences.sql)).
+48. Columns with [enum](https://www.postgresql.org/docs/current/datatype-enum.html) type ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_enum_type.sql)).
 
 ## Local development
 
