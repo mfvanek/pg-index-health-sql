@@ -76,6 +76,7 @@ For more information please see [PostgreSQL Versioning Policy](https://www.postg
 46. Unlogged tables ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/unlogged_tables.sql)).
 47. Unlogged sequences ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/unlogged_sequences.sql)).
 48. Columns with [enum](https://www.postgresql.org/docs/current/datatype-enum.html) type ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/columns_with_enum_type.sql)).
+49. Cyclical relationships between tables via foreign keys ([sql](https://github.com/mfvanek/pg-index-health-sql/blob/master/sql/cyclic_foreign_keys.sql)).
 
 ## Local development
 
