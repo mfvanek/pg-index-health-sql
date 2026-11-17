@@ -40,7 +40,7 @@ with
         where
             pc.relkind in ('r', 'i', 'S', 'v', 'm', 'p', 'I') and
             /* decided not to filter by the pc.relispartition field here */
-            (pc.relname ~ '[A-Z]' or pc.relname ~ '[^a-z0-9_]') /* the object name has characters that require quoting */
+            pc.relname !~ '^[a-z_][a-z0-9_]*$' /* the object name has characters that require quoting */
 
         union all
 
@@ -51,7 +51,7 @@ with
             pg_catalog.pg_proc p
             inner join nsp on nsp.oid = p.pronamespace
         where
-            p.proname ~ '[A-Z]' or p.proname ~ '[^a-z0-9_]'
+            p.proname !~ '^[a-z_][a-z0-9_]*$'
 
         union all
 
@@ -62,7 +62,7 @@ with
             pg_catalog.pg_constraint c
             inner join nsp on nsp.oid = c.connamespace
         where
-            (c.conname ~ '[A-Z]' or c.conname ~ '[^a-z0-9_]') and
+            c.conname !~ '^[a-z_][a-z0-9_]*$' and
             c.conparentid = 0 and c.coninhcount = 0 /* not a constraint in a partition */
     )
 

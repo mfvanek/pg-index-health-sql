@@ -25,6 +25,6 @@ where
     not pc.relispartition and
     col.attnum > 0 and /* to filter out system columns such as oid, ctid, xmin, xmax, etc. */
     not col.attisdropped and
-    (col.attname ~ '[A-Z]' or col.attname ~ '[^a-z0-9_]') and /* column name has characters that require quoting */
+    col.attname !~ '^[a-z_][a-z0-9_]*$' and /* column name has characters that require quoting */
     nsp.nspname = :schema_name_param::text
 order by table_name, column_name;
