@@ -18,7 +18,7 @@ The SQL file names correspond 1:1 with diagnostic check names in the companion J
 
 ## Linting
 
-The only development tooling is **SQLFluff** for SQL linting (CI: `.github/workflows/sqlfluff.yml`). Run locally via Docker:
+**SQLFluff** is used for SQL linting (CI: `.github/workflows/sqlfluff.yml`). Run locally via Docker:
 
 **Linux/macOS:**
 ```bash
