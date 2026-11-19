@@ -88,4 +88,4 @@ where
             (ui.predicate_columns <@ fk.conkey::int[]) /* index predicate checks only foreign key columns for not null */
     )
 group by fk.conrelid, fk.conname, fk.oid
-order by table_name, columns;
+order by table_name, constraint_name;

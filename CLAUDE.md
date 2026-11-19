@@ -123,7 +123,29 @@ s.seqrelid::regclass::text as sequence_name
 Wrap constraint/column/index names in `quote_ident()` when returning them as text.
 
 ### Ordering
-All result sets must have an `order by` clause to ensure consistent output.
+All result sets must have an `order by` clause, and the order must be deterministic:
+the same schema must always produce the same rows in the same order, regardless of data volume, statistics or object creation order.
+
+- **Use a unique sort key.** The `order by` columns together must uniquely identify each row. Established keys:
+
+  | Result kind | `order by` |
+  |---|---|
+  | Table-level | `table_name` |
+  | Index-level | `table_name, index_name` |
+  | Column-level | `table_name, column_name` |
+  | Constraint-level | `table_name, constraint_name` |
+  | Object-level (`objects_*`) | `object_type, object_name` |
+  | Sequence-level | `sequence_name` |
+
+- **Sort by names, not by volatile values.** Never use sizes (`pg_relation_size`, `pg_table_size`), statistics counters
+  (`idx_scan`, `seq_scan`), OIDs, or arrays of columns as a sort key: they change over time, depend on creation order, or produce ties.
+- **Sort by the output aliases**, not by raw catalog columns. Names are returned through `quote_ident()`/`::regclass::text`,
+  so use `order by table_name, constraint_name`, not `order by table_name, c.conname`.
+- **Order inside aggregates too.** Every `string_agg`/`array_agg` that builds a list of objects must have its own `order by`
+  (e.g. `string_agg(... order by idx::text)`), so the content of a value is stable.
+- **Build pairs in name order.** When a self-join produces pairs of objects (intersected/duplicated indexes or foreign keys),
+  deduplicate them by name (`a.index_name < b.index_name`), not by OID.
+- **Exception:** queries in `sql/ext/` that rank by a metric with `limit` (e.g. slowest queries) sort by that metric.
 
 ### Column order preservation
 When returning index or foreign key columns, maintain original column order using `array_agg(... order by u.ordinality)`.

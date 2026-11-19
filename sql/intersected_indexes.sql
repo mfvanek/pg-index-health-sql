@@ -14,6 +14,7 @@ with
         select
             pi.indrelid,
             pi.indexrelid,
+            pi.indexrelid::regclass::text as index_name,
             array_to_string(pi.indkey, ' ') as cols,
             'idx=' || pi.indexrelid::regclass || ', size=' || pg_relation_size(pi.indexrelid) as info,
             coalesce(pg_get_expr(pi.indpred, pi.indrelid, true), '') as pred
@@ -32,7 +33,7 @@ select
 from
     (select * from index_info) a
     inner join
-        (select * from index_info) b on (a.indrelid = b.indrelid and a.indexrelid > b.indexrelid and (
+        (select * from index_info) b on (a.indrelid = b.indrelid and a.index_name < b.index_name and (
         (a.cols like b.cols || '%' and coalesce(substr(a.cols, length(b.cols) + 1, 1), ' ') = ' ') or
         (b.cols like a.cols || '%' and coalesce(substr(b.cols, length(a.cols) + 1, 1), ' ') = ' ')
     ) and

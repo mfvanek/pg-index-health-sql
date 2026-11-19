@@ -42,4 +42,4 @@ where
     not pi.indisunique and
     pi.indexrelid not in (select * from foreign_key_indexes) and /* retain indexes on foreign keys */
     psui.idx_scan < 50::integer
-order by table_name, pg_relation_size(pi.indexrelid) desc;
+order by table_name, index_name;
