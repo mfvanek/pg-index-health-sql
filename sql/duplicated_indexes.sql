@@ -8,7 +8,7 @@
 -- Finds completely identical indexes.
 select
     table_name,
-    string_agg('idx=' || idx::text || ', size=' || pg_relation_size(idx), '; ') as duplicated_indexes
+    string_agg('idx=' || idx::text || ', size=' || pg_relation_size(idx), '; ' order by idx::text) as duplicated_indexes
 from (
     select
         pi.indexrelid::regclass as idx,
@@ -29,4 +29,4 @@ from (
 ) sub
 group by table_name, grouping_key
 having count(*) > 1
-order by table_name, sum(pg_relation_size(idx)) desc;
+order by table_name, duplicated_indexes;
