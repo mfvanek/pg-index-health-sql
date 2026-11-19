@@ -43,7 +43,20 @@ Each database structure check starts with an SQL query against `pg_catalog`.
     select
         array_agg(quote_ident(a.attname) || ',' || a.attnotnull::text order by u.ordinality) as columns
     ```
-12. All query results must be ordered in some way.
+12. All query results must be ordered, and the order must be deterministic —
+    the same schema must always produce the same rows in the same order:
+    - The `order by` columns together must uniquely identify each row, e.g.
+      `table_name` for tables, `table_name, index_name` for indexes, `table_name, column_name` for columns,
+      `table_name, constraint_name` for constraints, `object_type, object_name` for `objects_*` checks.
+    - Sort by names only. Don't sort by sizes, statistics counters, OIDs or arrays of columns:
+      they change over time, depend on object creation order, or produce ties.
+    - Sort by the output aliases (`constraint_name`), not by raw catalog columns (`c.conname`).
+    - Every `string_agg`/`array_agg` that builds a list of objects must have its own `order by`:
+      ```sql
+      string_agg('idx=' || idx::text, '; ' order by idx::text)
+      ```
+    - When a self-join produces pairs of objects, deduplicate them by name (`a.index_name < b.index_name`), not by OID.
+    - Queries in `sql/ext/` that rank by a metric with `limit` are an exception and sort by that metric.
 13. All queries must have a brief description.
     Links to documentation or articles with detailed descriptions are welcome.
 14. The SQL file name must match the corresponding diagnostic name in the [Java project](https://github.com/mfvanek/pg-index-health).
