@@ -145,7 +145,6 @@ the same schema must always produce the same rows in the same order, regardless 
   (e.g. `string_agg(... order by idx::text)`), so the content of a value is stable.
 - **Build pairs in name order.** When a self-join produces pairs of objects (intersected/duplicated indexes or foreign keys),
   deduplicate them by name (`a.index_name < b.index_name`), not by OID.
-- **Exception:** queries in `sql/ext/` that rank by a metric with `limit` (e.g. slowest queries) sort by that metric.
 
 ### Column order preservation
 When returning index or foreign key columns, maintain original column order using `array_agg(... order by u.ordinality)`.
@@ -161,7 +160,6 @@ Use `-- noqa: disable=RULE` inline comments when linter rules must be overridden
 
 ```
 sql/              # One .sql file per diagnostic check (40+ checks)
-sql/ext/          # Extension-dependent queries (requires pg_stat_statements)
 .sqlfluff         # SQLFluff config (PostgreSQL dialect)
 .github/
   workflows/      # CI workflows (sqlfluff.yml: lints sql/ on push to master and on PRs)

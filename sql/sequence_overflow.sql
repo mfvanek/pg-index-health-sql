@@ -38,8 +38,9 @@ with
             t.data_type,
             case
                 /* ascending or descending sequence */
-                when t.increment_by > 0 then 100.0 * (t.max_value - coalesce(t.last_value, t.start_value)) / (t.max_value - t.min_value)
-                else 100.0 * (coalesce(t.last_value, t.start_value) - t.min_value) / (t.max_value - t.min_value)
+                /* cast to numeric before subtracting to avoid bigint overflow on sequences covering the full bigint range */
+                when t.increment_by > 0 then 100.0 * (t.max_value::numeric - coalesce(t.last_value, t.start_value)) / (t.max_value::numeric - t.min_value)
+                else 100.0 * (coalesce(t.last_value, t.start_value)::numeric - t.min_value) / (t.max_value::numeric - t.min_value)
             end ::numeric(5, 2) as remaining_percentage /* percentage of remaining values */
         from all_sequences t
     )

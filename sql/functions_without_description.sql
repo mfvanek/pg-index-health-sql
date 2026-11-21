@@ -15,5 +15,14 @@ from
     inner join pg_catalog.pg_proc p on p.pronamespace = nsp.oid
 where
     (obj_description(p.oid) is null or length(trim(obj_description(p.oid))) = 0) and
+    /* functions that belong to extensions can't be changed by the user */
+    not exists (
+        select 1
+        from pg_catalog.pg_depend d
+        where
+            d.classid = 'pg_catalog.pg_proc'::regclass and
+            d.objid = p.oid and
+            d.deptype = 'e'
+    ) and
     nsp.nspname = :schema_name_param::text
 order by function_name, function_signature;

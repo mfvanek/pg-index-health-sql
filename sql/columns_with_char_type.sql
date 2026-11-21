@@ -29,6 +29,6 @@ where
     col.attnum > 0 and /* to filter out system columns such as oid, ctid, xmin, xmax, etc. */
     not col.attisdropped and
     col.atttypid in ('character'::regtype, 'char'::regtype, 'bpchar'::regtype) and
-    col.atttypmod > 0 and /* only for fixed length varchar (not varchar without n) */
+    col.atttypmod > 0 and /* only types with a length; bpchar without n has no length limit (atttypmod = -1) */
     nsp.nspname = :schema_name_param::text
 order by table_name, column_name;

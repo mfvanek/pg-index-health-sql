@@ -14,7 +14,7 @@
 -- {b9b1f6f5-7f90-4b68-a389-f0ad8bb5784b} - with curly braces - 38 characters
 select
     pc.oid::regclass::text as table_name,
-    pi.indexrelid::regclass as index_name,
+    pi.indexrelid::regclass::text as index_name,
     pg_relation_size(pi.indexrelid) as index_size,
     array_agg(quote_ident(a.attname) || ',' || a.attnotnull::text order by u.attposition) as columns
 from

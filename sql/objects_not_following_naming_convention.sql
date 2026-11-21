@@ -22,6 +22,16 @@ with
             nsp.nspname = :schema_name_param::text
     ),
 
+    /* objects that belong to extensions: their names can't be changed by the user */
+    ext_members as (
+        select
+            d.classid,
+            d.objid
+        from pg_catalog.pg_depend d
+        where
+            d.deptype = 'e'
+    ),
+
     bad_names as (
         select
             pc.oid::regclass::text as object_name,
@@ -37,10 +47,19 @@ with
         from
             pg_catalog.pg_class pc
             inner join nsp on nsp.oid = pc.relnamespace
+            left join pg_catalog.pg_index pi on pi.indexrelid = pc.oid
         where
             pc.relkind in ('r', 'i', 'S', 'v', 'm', 'p', 'I') and
             /* decided not to filter by the pc.relispartition field here */
-            pc.relname !~ '^[a-z_][a-z0-9_]*$' /* the object name has characters that require quoting */
+            pc.relname !~ '^[a-z_][a-z0-9_]*$' and /* the object name has characters that require quoting */
+            /* indexes are not extension members themselves, so they are checked via their table */
+            not exists (
+                select 1
+                from ext_members e
+                where
+                    e.classid = 'pg_catalog.pg_class'::regclass and
+                    e.objid in (pc.oid, pi.indrelid)
+            )
 
         union all
 
@@ -51,7 +70,14 @@ with
             pg_catalog.pg_proc p
             inner join nsp on nsp.oid = p.pronamespace
         where
-            p.proname !~ '^[a-z_][a-z0-9_]*$'
+            p.proname !~ '^[a-z_][a-z0-9_]*$' and
+            not exists (
+                select 1
+                from ext_members e
+                where
+                    e.classid = 'pg_catalog.pg_proc'::regclass and
+                    e.objid = p.oid
+            )
 
         union all
 
@@ -63,7 +89,15 @@ with
             inner join nsp on nsp.oid = c.connamespace
         where
             c.conname !~ '^[a-z_][a-z0-9_]*$' and
-            c.conparentid = 0 and c.coninhcount = 0 /* not a constraint in a partition */
+            c.conparentid = 0 and c.coninhcount = 0 and /* not a constraint in a partition */
+            /* constraints are not extension members themselves, so they are checked via their table or domain */
+            not exists (
+                select 1
+                from ext_members e
+                where
+                    (e.classid = 'pg_catalog.pg_class'::regclass and e.objid = c.conrelid) or
+                    (e.classid = 'pg_catalog.pg_type'::regclass and e.objid = c.contypid)
+            )
     )
 
 select *

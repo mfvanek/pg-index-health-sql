@@ -21,20 +21,17 @@ with
             nsp.nspname = :schema_name_param::text
     ),
 
+    /* foreign keys from all schemas: a table can be linked only by a foreign key from another schema */
     fkeys as (
         select c.conrelid as fk_oid
-        from
-            pg_catalog.pg_constraint c
-            inner join nsp on nsp.oid = c.connamespace
+        from pg_catalog.pg_constraint c
         where
             c.contype = 'f'
 
         union
 
         select c.confrelid as fk_oid
-        from
-            pg_catalog.pg_constraint c
-            inner join nsp on nsp.oid = c.connamespace
+        from pg_catalog.pg_constraint c
         where
             c.contype = 'f'
     )

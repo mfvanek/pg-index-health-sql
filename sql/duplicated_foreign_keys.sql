@@ -13,6 +13,7 @@ with
         select
             c.conrelid as table_oid,
             c.confrelid as foreign_table_oid,
+            c.confkey as foreign_columns,
             u.attposition,
             col.attnotnull,
             quote_ident(col.attname) as column_name,
@@ -33,9 +34,10 @@ with
             constraint_name,
             table_oid,
             foreign_table_oid,
+            foreign_columns,
             array_agg(column_name || ',' || attnotnull::text order by attposition) as columns
         from fk_with_attributes
-        group by constraint_name, table_oid, foreign_table_oid
+        group by constraint_name, table_oid, foreign_table_oid, foreign_columns
     )
 
 select
@@ -50,5 +52,6 @@ from
         on c2.constraint_name > c1.constraint_name and /* to prevent duplicated rows in output */
         c2.table_oid = c1.table_oid and
         c2.foreign_table_oid = c1.foreign_table_oid and
+        c2.foreign_columns = c1.foreign_columns and /* the same referenced columns in the same order */
         c2.columns = c1.columns
 order by table_name, c1.constraint_name, c2.constraint_name;
