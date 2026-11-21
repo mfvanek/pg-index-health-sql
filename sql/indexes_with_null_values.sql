@@ -22,7 +22,8 @@ where
     not pc.relispartition and
     nsp.nspname = :schema_name_param::text and
     array_position(pi.indkey, a.attnum) = 0 and /* only for the first segment */
-    /* skip partial indexes whose predicate contains the exact condition "(column IS NOT NULL)" */
-    (pi.indpred is null or strpos(pg_get_expr(pi.indpred, pi.indrelid), '(' || quote_ident(a.attname) || ' IS NOT NULL)') = 0)
+    /* skip partial indexes whose predicate references the column (e.g. "col IS NOT NULL", "col = 'x'", "col > 0"): */
+    /* such a predicate usually excludes nulls. Every column reference in the predicate tree is a VAR node with its attnum */
+    (pi.indpred is null or pi.indpred::text !~ (':varattno ' || a.attnum || ' '))
 group by pi.indrelid, pi.indexrelid, pi.indpred
 order by table_name, index_name;

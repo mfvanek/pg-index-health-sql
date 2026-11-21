@@ -7,6 +7,8 @@
 
 -- Finds indexes that contain boolean values.
 -- Returns all columns of such an index in their original order.
+-- Expressions are not included in the columns: they have no column name (they are stored in indkey as 0).
+-- For example, for an index on (flag, lower(name)) only the flag column is returned.
 select
     pi.indrelid::regclass::text as table_name,
     pi.indexrelid::regclass::text as index_name,
@@ -17,7 +19,7 @@ from
     inner join pg_catalog.pg_class pc on pc.oid = pi.indexrelid
     inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
     inner join unnest(pi.indkey) with ordinality u(attnum, attposition) on true
-    inner join pg_catalog.pg_attribute col on col.attrelid = pi.indrelid and col.attnum = u.attnum
+    inner join pg_catalog.pg_attribute col on col.attrelid = pi.indrelid and col.attnum = u.attnum /* skips expressions (attnum 0) */
 where
     nsp.nspname = :schema_name_param::text and
     not pi.indisunique and
