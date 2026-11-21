@@ -14,8 +14,8 @@ from (
         pi.indexrelid::regclass as idx,
         pi.indrelid::regclass::text as table_name, /* cast to text for sorting purposes */
         (
-            pi.indrelid::text || ' ' || pi.indclass::text || ' ' || pi.indkey::text || ' ' ||
-            pi.indcollation::text || ' ' ||
+            pi.indrelid::text || ' ' || pc.relam::text || ' ' || pi.indclass::text || ' ' || pi.indkey::text || ' ' ||
+            pi.indnkeyatts::text || ' ' || pi.indcollation::text || ' ' || pi.indoption::text || ' ' ||
             coalesce(pg_get_expr(pi.indexprs, pi.indrelid), '') || ' ' ||
             coalesce(pg_get_expr(pi.indpred, pi.indrelid), '')
         ) as grouping_key

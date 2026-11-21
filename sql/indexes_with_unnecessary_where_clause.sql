@@ -28,7 +28,8 @@ where
             inner join pg_catalog.pg_attribute att on att.attrelid = pc.oid and att.attnum = k.attnum
         where
             att.attnotnull = true and
-            pg_get_indexdef(pi.indexrelid) ilike '%where%' || quote_ident(att.attname) || ' is not null%'
+            /* the predicate contains the exact condition "(column IS NOT NULL)" */
+            strpos(pg_get_expr(pi.indpred, pi.indrelid), '(' || quote_ident(att.attname) || ' IS NOT NULL)') > 0
     ) and
     nsp.nspname = :schema_name_param::text
 group by pc.oid, pi.indexrelid

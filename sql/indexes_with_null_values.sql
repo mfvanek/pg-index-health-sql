@@ -22,6 +22,7 @@ where
     not pc.relispartition and
     nsp.nspname = :schema_name_param::text and
     array_position(pi.indkey, a.attnum) = 0 and /* only for the first segment */
-    (pi.indpred is null or (position(lower(a.attname) in lower(pg_get_expr(pi.indpred, pi.indrelid))) = 0))
+    /* skip partial indexes whose predicate contains the exact condition "(column IS NOT NULL)" */
+    (pi.indpred is null or strpos(pg_get_expr(pi.indpred, pi.indrelid), '(' || quote_ident(a.attname) || ' IS NOT NULL)') = 0)
 group by pi.indrelid, pi.indexrelid, pi.indpred
 order by table_name, index_name;

@@ -56,7 +56,6 @@ Each database structure check starts with an SQL query against `pg_catalog`.
       string_agg('idx=' || idx::text, '; ' order by idx::text)
       ```
     - When a self-join produces pairs of objects, deduplicate them by name (`a.index_name < b.index_name`), not by OID.
-    - Queries in `sql/ext/` that rank by a metric with `limit` are an exception and sort by that metric.
 13. All queries must have a brief description.
     Links to documentation or articles with detailed descriptions are welcome.
 14. The SQL file name must match the corresponding diagnostic name in the [Java project](https://github.com/mfvanek/pg-index-health).

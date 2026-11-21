@@ -17,7 +17,9 @@ with
             pi.indexrelid::regclass::text as index_name,
             array_to_string(pi.indkey, ' ') as cols,
             'idx=' || pi.indexrelid::regclass || ', size=' || pg_relation_size(pi.indexrelid) as info,
-            coalesce(pg_get_expr(pi.indpred, pi.indrelid, true), '') as pred
+            coalesce(pg_get_expr(pi.indpred, pi.indrelid, true), '') as pred,
+            /* expression columns are stored in indkey as 0, so the expressions themselves have to be compared */
+            coalesce(pg_get_expr(pi.indexprs, pi.indrelid, true), '') as exprs
         from
             pg_catalog.pg_index pi
             inner join pg_catalog.pg_class pc on pc.oid = pi.indexrelid
@@ -34,8 +36,8 @@ from
     (select * from index_info) a
     inner join
         (select * from index_info) b on (a.indrelid = b.indrelid and a.index_name < b.index_name and (
-        (a.cols like b.cols || '%' and coalesce(substr(a.cols, length(b.cols) + 1, 1), ' ') = ' ') or
-        (b.cols like a.cols || '%' and coalesce(substr(b.cols, length(a.cols) + 1, 1), ' ') = ' ')
+        (a.cols like b.cols || '%' and coalesce(substr(a.cols, length(b.cols) + 1, 1), ' ') = ' ' and (b.exprs = '' or b.exprs = a.exprs)) or
+        (b.cols like a.cols || '%' and coalesce(substr(b.cols, length(a.cols) + 1, 1), ' ') = ' ' and (a.exprs = '' or a.exprs = b.exprs))
     ) and
     a.pred = b.pred)
 order by table_name, intersected_indexes;
