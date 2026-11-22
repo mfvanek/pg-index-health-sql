@@ -76,7 +76,7 @@ with
 select
     fk.conrelid::regclass::text as table_name,
     quote_ident(fk.conname) as constraint_name,
-    array_agg(quote_ident(col.attname) || ',' || col.attnotnull::text order by u.attposition) as columns
+    array_agg(quote_ident(col.attname) || ',' || col.attnotnull::text || ',' || col.atttypid::regtype::text order by u.attposition) as columns
 from
     foreign_keys fk
     inner join lateral unnest(fk.conkey) with ordinality u(attnum, attposition) on true

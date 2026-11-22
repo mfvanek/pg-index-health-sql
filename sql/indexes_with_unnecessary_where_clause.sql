@@ -10,7 +10,7 @@ select
     pc.oid::regclass::text as table_name,
     pi.indexrelid::regclass::text as index_name,
     pg_relation_size(pi.indexrelid) as index_size,
-    array_agg(quote_ident(a.attname) || ',' || a.attnotnull::text order by u.attposition) as columns
+    array_agg(quote_ident(a.attname) || ',' || a.attnotnull::text || ',' || a.atttypid::regtype::text order by u.attposition) as columns
 from
     pg_catalog.pg_index pi
     inner join pg_catalog.pg_class pc on pc.oid = pi.indrelid
