@@ -24,8 +24,9 @@ with
             pi.indexrelid as index_oid,
             array_agg(
                 case
-                    when a.attnum is not null then quote_ident(a.attname) || ',' || a.attnotnull::text
-                    else quote_ident(pg_get_indexdef(pi.indexrelid, u.attposition::int, true)) || ',true'
+                    when a.attnum is not null then quote_ident(a.attname) || ',' || a.attnotnull::text || ',' || a.atttypid::regtype::text
+                    /* an expression has no table column: its type is taken from the index's own attribute */
+                    else quote_ident(pg_get_indexdef(pi.indexrelid, u.attposition::int, true)) || ',true,' || ia.atttypid::regtype::text
                 end
                 order by u.attposition
             ) as columns,
@@ -36,6 +37,7 @@ with
             inner join pg_catalog.pg_namespace nsp on nsp.oid = pc.relnamespace
             left join lateral unnest(pi.indkey) with ordinality u(attnum, attposition) on true
             left join pg_catalog.pg_attribute a on a.attrelid = pi.indrelid and a.attnum = u.attnum
+            left join pg_catalog.pg_attribute ia on ia.attrelid = pi.indexrelid and ia.attnum = u.attposition
             left join lateral unnest(pi.indclass) with ordinality uop(opcoid, attposition) on uop.attposition = u.attposition
             left join pg_catalog.pg_opclass op on op.oid = uop.opcoid
         where

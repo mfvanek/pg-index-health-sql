@@ -23,7 +23,7 @@ select
     pc.oid::regclass::text as table_name,
     c.conindid::regclass::text as index_name,
     pg_relation_size(c.conindid) as index_size,
-    array_agg(quote_ident(col.attname) || ',' || col.attnotnull::text order by u.attposition) as columns
+    array_agg(quote_ident(col.attname) || ',' || col.attnotnull::text || ',' || col.atttypid::regtype::text order by u.attposition) as columns
 from
     pg_catalog.pg_constraint c
     inner join pg_catalog.pg_class pc on pc.oid = c.conrelid
@@ -50,7 +50,7 @@ select
     pc.oid::regclass::text as table_name,
     c.conindid::regclass::text as index_name,
     pg_relation_size(c.conindid) as index_size,
-    array_agg(quote_ident(col.attname) || ',' || col.attnotnull::text order by u.attposition) as columns
+    array_agg(quote_ident(col.attname) || ',' || col.attnotnull::text || ',' || col.atttypid::regtype::text order by u.attposition) as columns
 from
     pg_catalog.pg_constraint c
     inner join pg_catalog.pg_class pc on pc.oid = c.conrelid

@@ -93,7 +93,7 @@ with recursive
 select
     array_agg(c.conrelid::regclass::text order by s.constraint_position, u.attposition) as table_names,
     array_agg(quote_ident(c.conname) order by s.constraint_position, u.attposition) as constraint_names,
-    array_agg(quote_ident(col.attname) || ',' || col.attnotnull::text order by s.constraint_position, u.attposition) as columns
+    array_agg(quote_ident(col.attname) || ',' || col.attnotnull::text || ',' || col.atttypid::regtype::text order by s.constraint_position, u.attposition) as columns
 from
     fk_paths p
     inner join lateral unnest(p.constraints_path) with ordinality s(constraint_oid, constraint_position) on true

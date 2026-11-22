@@ -18,6 +18,7 @@ with
             pc.oid::regclass::text as table_name,
             col.attname,
             col.attnotnull,
+            col.atttypid,
             col.attnum as attposition,
             regexp_replace(col.attname, '\d+$', '') as base_name
         from
@@ -45,7 +46,7 @@ with
 select
     cp.table_name,
     pg_table_size(cp.oid) as table_size,
-    array_agg(quote_ident(cp.attname) || ',' || cp.attnotnull::text order by cp.attposition) as columns
+    array_agg(quote_ident(cp.attname) || ',' || cp.attnotnull::text || ',' || cp.atttypid::regtype::text order by cp.attposition) as columns
 from
     column_patterns cp
     inner join groups_with_two_or_more g on g.oid = cp.oid and g.base_name = cp.base_name
