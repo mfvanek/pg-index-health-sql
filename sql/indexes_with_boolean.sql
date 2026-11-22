@@ -7,13 +7,14 @@
 
 -- Finds indexes that contain boolean values.
 -- Returns all columns of such an index in their original order.
+-- Each column is returned as "name,not_null,type", so boolean columns can be identified by the type.
 -- Expressions are not included in the columns: they have no column name (they are stored in indkey as 0).
 -- For example, for an index on (flag, lower(name)) only the flag column is returned.
 select
     pi.indrelid::regclass::text as table_name,
     pi.indexrelid::regclass::text as index_name,
     pg_relation_size(pi.indexrelid) as index_size,
-    array_agg(quote_ident(col.attname) || ',' || col.attnotnull::text order by u.attposition) as columns
+    array_agg(quote_ident(col.attname) || ',' || col.attnotnull::text || ',' || col.atttypid::regtype::text order by u.attposition) as columns
 from
     pg_catalog.pg_index pi
     inner join pg_catalog.pg_class pc on pc.oid = pi.indexrelid
