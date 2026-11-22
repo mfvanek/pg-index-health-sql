@@ -5,12 +5,14 @@
  * Licensed under the Apache License 2.0
  */
 
--- Finds indexes that can contain null values.
+-- Finds indexes that can contain null values (the first column of the index is nullable).
+-- Returns only the nullable first column of such an index, so the columns array always has exactly one element.
+-- The column is returned as "name,not_null,type".
 select
     pi.indrelid::regclass::text as table_name,
     pi.indexrelid::regclass::text as index_name,
-    string_agg(quote_ident(a.attname), ', ') as nullable_fields, /* in fact, there will always be only one column */
-    pg_relation_size(pi.indexrelid) as index_size
+    pg_relation_size(pi.indexrelid) as index_size,
+    array_agg(quote_ident(a.attname) || ',' || a.attnotnull::text || ',' || a.atttypid::regtype::text) as columns
 from
     pg_catalog.pg_index pi
     inner join pg_catalog.pg_class pc on pc.oid = pi.indexrelid
