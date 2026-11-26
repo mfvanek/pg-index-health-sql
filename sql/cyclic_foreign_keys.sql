@@ -22,7 +22,7 @@
 --
 -- PostgreSQL 18 introduced NOT ENFORCED foreign keys (pg_constraint.conenforced).
 -- They are still declared relationships between tables, so this check treats them as regular foreign keys.
--- The conenforced column is intentionally not used because it does not exist in PostgreSQL 14-17.
+-- The conenforced column is intentionally not used because it does not exist in PostgreSQL 15-17.
 --
 -- Each row describes one cycle as an ordered chain of foreign keys.
 -- The three arrays have the same length and should be read position by position, one element per foreign key column
