@@ -204,4 +204,4 @@ See `objects_with_upper_case_names.sql` / `columns_with_upper_case_names.sql` an
 
 ## Supported PostgreSQL Versions
 
-PostgreSQL 14, 15, 16, 17, and 18. PostgreSQL 13 and earlier are not supported.
+PostgreSQL 15, 16, 17, and 18. PostgreSQL 14 and earlier are not supported.
